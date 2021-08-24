@@ -85,10 +85,15 @@ exports.login = async (req, res) => {
         message: "Invalid Credentials",
       });
     }
-    const token = user._id;
+    const token = signToken(user._id);
     res.status(200).json({
       status: "true",
       token,
     });
-  } catch (err) {}
+  } catch (err) {
+    res.status(404).json({
+      status: "false",
+      message: error.message,
+    });
+  }
 };
