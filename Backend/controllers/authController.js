@@ -93,7 +93,7 @@ exports.login = async (req, res) => {
   } catch (error) {
     res.status(404).json({
       status: 'false',
-      message: err.message,
+      message: error.message,
     });
   }
 };
