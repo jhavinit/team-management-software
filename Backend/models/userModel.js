@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const validator = require("validator");
-const bcrypt = require("bcryptjs");
+const mongoose = require('mongoose');
+const validator = require('validator');
+const bcrypt = require('bcryptjs');
 // const joi = require('joi');
 // const Joi = require('joi');
 // const joigoose = require('joigoose')(mongoose, null, {
@@ -11,22 +11,22 @@ const bcrypt = require("bcryptjs");
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, " Please provide a name"],
+    required: [true, ' Please provide a name'],
   },
   username: {
     type: String,
     // unique: true,
-    required: [true, "Please provide an username"],
+    required: [true, 'Please provide an username'],
   },
   email: {
     type: String,
     unique: true,
-    required: [true, "Please provide an email address"],
-    validate: [validator.isEmail, "Please provide an valid email"],
+    required: [true, 'Please provide an email address'],
+    validate: [validator.isEmail, 'Please provide an valid email'],
   },
   password: {
     type: String,
-    required: [true, "Please provide a password"],
+    required: [true, 'Please provide a password'],
   },
   passwordConfirm: {
     type: String,
@@ -36,42 +36,43 @@ const userSchema = new mongoose.Schema({
       validator: function (el) {
         return el === this.password;
       },
-      message: "Password are not the same",
+      message: 'Password are not the same',
     },
   },
   role: {
     type: String,
-    enum: ["user", "admin"],
-    default: "user",
+    enum: ['user', 'admin'],
+    default: 'user',
   },
   activation_token: {
     type: String,
+    unique: true,
   },
   phoneNumber: {
     type: Number,
-    required: [true, "Please enter the phoneNumber"],
+    required: [true, 'Please enter the phoneNumber'],
   },
   companyName: {
     type: String,
-    required: [true, "Please enter the company name"],
+    required: [true, 'Please enter the company name'],
   },
   companyDescription: {
     type: String,
-    required: [true, "Please specify the company description"],
+    required: [true, 'Please specify the company description'],
   },
   companyNumber: {
     type: Number,
-    required: [true, "Please enter the company number"],
+    required: [true, 'Please enter the company number'],
   },
   companyEmail: {
     type: String,
-    required: [true, "Please enter the company email"],
+    required: [true, 'Please enter the company email'],
     unique: true,
-    validate: [validator.isEmail, "Please provide an valid email"],
+    validate: [validator.isEmail, 'Please provide an valid email'],
   },
   address: {
     type: String,
-    required: [true, "Please enter your address"],
+    required: [true, 'Please enter your address'],
     trim: true,
   },
 });
@@ -85,9 +86,9 @@ const userSchema = new mongoose.Schema({
 
 // var userSchema = new mongoose.Schema(joigoose.convert(joiUserSchema));
 
-userSchema.pre("save", async function (next) {
+userSchema.pre('save', async function (next) {
   //this function only run if password is modified
-  if (!this.isModified("password")) return next();
+  if (!this.isModified('password')) return next();
 
   //hash the password with cost of 16
   this.password = await bcrypt.hash(this.password, 12);
@@ -95,5 +96,5 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model('User', userSchema);
 module.exports = User;
