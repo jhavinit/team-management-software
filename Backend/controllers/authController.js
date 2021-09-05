@@ -1,3 +1,4 @@
+const { promisify } = require("util");
 const jwt = require("jsonwebtoken");
 const Admin = require("./../models/adminModel");
 const bcrypt = require("bcryptjs");
@@ -92,9 +93,54 @@ exports.login = async (req, res) => {
       });
     }
   } catch (err) {
-    res.status(404).json({
+    res.status(401).json({
       status: "false",
       message: err.message,
     });
   }
+};
+
+//check if the user is logged in or not
+exports.protect = async (req, res, next) => {
+  let token;
+  //token exists or not
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+  if (!token) {
+    res.status(401).json({
+      status: 0,
+      message: "You are not currently logged in",
+    });
+    return;
+  }
+  //verify the token
+  try {
+    const decoded = await promisify(jwt.verify)(
+      token,
+      process.env.JWT_SECRET_KEY
+    );
+    console.log(decoded);
+    const freshUser = await Admin.findById(decoded.id);
+    if (!freshUser) {
+      res.status(401).json({
+        status: 0,
+        message: err.message,
+      });
+      return;
+    }
+    // password changed
+    req.user = freshUser;
+    console.log(req.user);
+  } catch (err) {
+    res.status(401).json({
+      status: 0,
+      message: err.message,
+    });
+    return;
+  }
+  next();
 };

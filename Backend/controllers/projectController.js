@@ -63,25 +63,42 @@ exports.updateProject = async (req, res) => {
         status: 0,
         message: "You cannot change the owner of project",
       });
-    } /*else {
-      const curr = await Admin.findOne({ username: req.body.owner });
-      const updatedProject = await Project.findByIdAndUpdate(
-        curr._id,
-        req.body,
-        {
-          new: true,
-          runvalidators: true,
-        }
-      );
+    } else {
+      const currId = req.params.id;
+      const updatedProject = await Project.findByIdAndUpdate(currId, req.body, {
+        new: true,
+        runvalidators: true,
+      });
       res.status(200).json({
         status: 1,
         updatedProject,
       });
-    }*/
+    }
   } catch (err) {
     res.status(400).json({
       status: 0,
       message: err.message,
+    });
+  }
+};
+
+exports.getAllProjects = async (req, res) => {
+  const projects = req.user.projects;
+  console.log(projects);
+  if (!projects.length) {
+    res.status(400).json({
+      status: 1,
+      message: "No projects available",
+    });
+  } else {
+    let allProjects = [];
+    for (const projectId of projects) {
+      const project = await Project.findById(projectId);
+      allProjects.push(project);
+    }
+    res.status(200).json({
+      status: 1,
+      allProjects,
     });
   }
 };
