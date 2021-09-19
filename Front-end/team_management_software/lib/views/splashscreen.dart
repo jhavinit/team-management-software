@@ -1,11 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'homescreen.dart';
+import 'chat_section/push_notification.dart';
+import 'welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-  final TextStyle styleTextUnderTheLoader = TextStyle(
+  final TextStyle styleTextUnderTheLoader = const TextStyle(
       fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.black);
 
   @override
@@ -13,12 +13,23 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final splashDelay = 10;
+  final splashDelay = 6;
+  var token;
+  FirebaseNotification firebaseNotification=FirebaseNotification();
+
+  getDeviceToken()async{
+    token= await firebaseNotification.getToken();
+    print("token........... $token");
+
+  }
 
   @override
   void initState() {
-    super.initState();
+    firebaseNotification.initialise(context);
+    firebaseNotification.subscribeToTopic("puppy");
+    getDeviceToken();
 
+    super.initState();
     _loadWidget();
   }
 
@@ -29,7 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void navigationPage() {
     Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
+        MaterialPageRoute(builder: (BuildContext context) =>  WelcomeScreen()));
   }
 
   @override
@@ -75,7 +86,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       SizedBox(
                         width: MediaQuery.of(context).size.width / 1.4,
                         child: ColorizeAnimatedTextKit(
-                          speed: Duration(milliseconds: 200),
+                          speed: Duration(milliseconds: 100),
                           text: [
                             "MANAGE TEAMS",
                             "CREATE TASKS",

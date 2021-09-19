@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-
 class DropDownDemo extends StatefulWidget {
-  const DropDownDemo({Key? key}) : super(key: key);
 
+  final Function(String)? onChangedRole;
+    DropDownDemo({required this.onChangedRole});
   @override
   _DropDownDemoState createState() => _DropDownDemoState();
 }
@@ -39,6 +39,8 @@ class _DropDownDemoState extends State<DropDownDemo> {
               fontWeight: FontWeight.w600),
         ),
         onChanged: (String? value) {
+          widget.onChangedRole!(value!);
+
           setState(() {
             _chosenValue = value;
           });

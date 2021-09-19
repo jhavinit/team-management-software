@@ -1,11 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:team_management_software/constants.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:sizer/sizer.dart';
+import 'package:team_management_software/controller/http_functions.dart';
+import 'package:team_management_software/views/home_screen.dart';
+import 'package:team_management_software/views/screens/bottom_navigation.dart';
 import 'package:team_management_software/views/sign_up.dart';
+import 'package:team_management_software/views/user_sign_up.dart';
+import 'package:team_management_software/views/welcome_screen.dart';
 
 
 class SignInPage extends StatefulWidget {
+  String role;
+  SignInPage({required this.role});
   @override
   _SignInPageState createState() => _SignInPageState();
 }
@@ -14,7 +23,7 @@ class _SignInPageState extends State<SignInPage> {
   Constants constants=Constants();
 
   bool showSpinner = false;
-  TextEditingController usernameController = TextEditingController();
+ // TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController userNameController = TextEditingController();
   final formKey = GlobalKey<FormState>();
@@ -25,6 +34,21 @@ class _SignInPageState extends State<SignInPage> {
     });
     var form = formKey.currentState?.validate();
     if (form!) {
+      HttpFunctions httpFunctions=HttpFunctions();
+   String signInResponse=await httpFunctions.signInUser(username: userNameController.text,password: passwordController.text,role: widget.role);
+   var finalData=jsonDecode(signInResponse);
+   if(finalData["status"]=="true"){
+     final snackBar = SnackBar(content: Text("Sign in successful"),duration: Duration(milliseconds: 500),);
+     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+     Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+   }else{
+     final snackBar = SnackBar(content: Text("Invalid credentials"),duration: Duration(milliseconds: 1000),);
+     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+   }
+
+      // final snackBar = SnackBar(content: Text("Sign in successful"),duration: Duration(milliseconds: 500),);
+      // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      // Navigator.push(context, MaterialPageRoute(builder: (context)=>BottomNavigation()));
 
     }
 
@@ -128,7 +152,7 @@ class _SignInPageState extends State<SignInPage> {
                             child: InkWell(
                               onTap: () {
                                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
-                                  return SignUpPage();
+                                  return widget.role=="admin"?SignUpPage():UserSignUp();
                                 }));
                               },
                               child:

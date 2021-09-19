@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "353855303020",
+    "project_id": "team-management-softwa",
+    "storage_bucket": "team-management-softwa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:353855303020:android:c90323e4abba355e295749",
+        "android_client_info": {
+          "package_name": "com.example.team_management_software"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "353855303020-iqk7rgvg150dk9bui3sgvc2m4ihejgho.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNAmzgjAq40Mxgl1Of1A7Kz1uCWKieHVI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "353855303020-iqk7rgvg150dk9bui3sgvc2m4ihejgho.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
