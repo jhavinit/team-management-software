@@ -19,32 +19,78 @@ class _CreateTaskState extends State<CreateTask> {
   final taskDescriptionController=TextEditingController();
   int selectedPriority=0;
   int selectedStatus=0;
+  // ignore: prefer_typing_uninitialized_variables
+  var usersListForAssign;
+  String assignedTo="";
+  bool isAssigned=false;
 
-  Future<void>_dialogForAssign(){
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context){
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: 5,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context,index){
-                  return Text("index");
-                }),
-              ],
-            ),
+  @override
+  void didChangeDependencies() {
+    usersListForAssign=context.watch<Data>().listOfTokensNotifier;
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
+
+  Widget setupAlertDialogContainer(context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: EdgeInsets.only(bottom: 20),
+          child: Text("Assign Task To User"),),
+        Container(
+          //color: Colors.grey,
+          height: 300.0, // Change as per your requirement
+          width: 200.0, // Change as per your requirement
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount:usersListForAssign.length,
+            //usersListForAssign.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                onTap: (){
+
+                  isAssigned=true;
+                 assignedTo=usersListForAssign[index]["fullName"]!;
+                 print("assigned selected to $assignedTo");
+                  setState(() {
+                  });
+                  Navigator.pop(context);
+
+                },
+                dense: true,
+                //tileColor: Colors.red,
+                horizontalTitleGap: 10,
+                contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal:0),
+               title: Text(usersListForAssign[index]["fullName"]??"noName",
+                ),
+                subtitle: Text(usersListForAssign[index]["email"]??"noEmail"),
+                leading:  const CircleAvatar(
+                  backgroundImage: NetworkImage(
+                      "https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper.png"),
+                ),
+              );
+            },
           ),
-        );
-      }
+        ),
 
+      ],
     );
   }
 
+  Future<void>_dialogForAssign(){
+    return showDialog<void>(
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+              content: setupAlertDialogContainer(context)
+
+          );
+        }
+
+    );
+  }
 
 
   Future<void> _dialogForPriorityAndStatus(title) async {
@@ -126,7 +172,6 @@ class _CreateTaskState extends State<CreateTask> {
   }
 
   createNewTask()async{
-    //print("ccreate called");
     if(taskNameController.text!="" ) {
       if(isPicked){
         await context.read<Data>().addTaskInNotifier(
@@ -135,9 +180,10 @@ class _CreateTaskState extends State<CreateTask> {
           taskDescription: taskDescriptionController.text,
           dueDate: selectedDate.toString(),
           projectId: widget.projectId,
-          assignedTo: "emulator",
+          assignedTo:assignedTo,
           priority: selectedPriority,
           status: selectedStatus,
+
         );
         Navigator.pop(context);
       }
@@ -177,9 +223,7 @@ class _CreateTaskState extends State<CreateTask> {
     }
   }
 
-  assignTask(){
 
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -249,33 +293,52 @@ class _CreateTaskState extends State<CreateTask> {
                           child: Row(children: [
                           GestureDetector(
                             onTap:(){
-                             // _dialogForAssign();
-                              showSnackBArForProjectError("not implemented yet");
+                             _dialogForAssign();
+                         //     showSnackBArForProjectError("not implemented yet");
 
                         },
                             child: Row(
                               children: [
                                 CircleAvatar(
-                                  child: const Icon(
+                              child:    Icon(
                                     Icons.person,
-                                    color: Colors.grey,
+                                    color: !isAssigned
+                                        ? Colors.grey
+                                        : Colors.black,
                                   ),
-                                  backgroundColor: Colors.grey[200],
+                                  //        :
+                                  //     const Text(
+                                  //             "Ro",
+                                  //             style: TextStyle(
+                                  //                 fontWeight: FontWeight.bold,
+                                  //                 color: Colors.black),
+                                  //           ),
+                                  backgroundColor: !isAssigned
+                                      ? Colors.grey[200]
+                                      : Colors.yellow[800],
                                 ),
                                 const SizedBox(
                                   width: 10,
                                 ),
-                                const Text(
-                                  "Unassigned",
-                                  style: TextStyle(color: Colors.grey),
+                                Container(
+                                  width: 100,
+                                  child: Text(
+                                    isAssigned  ? assignedTo: "Unassigned",
+                                    style:  isAssigned
+                                        ? const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 18)
+                                        : TextStyle(color: Colors.grey),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
 
-                            const SizedBox(
-                              width: 30,
-                            ),
+                            // const SizedBox(
+                            //   width: 30,
+                            // ),
                             true
                                 ? GestureDetector(
                               onTap: (){

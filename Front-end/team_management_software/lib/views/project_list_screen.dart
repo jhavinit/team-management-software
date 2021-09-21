@@ -19,6 +19,7 @@ class ProjectListScreen extends StatefulWidget {
 
 class _ProjectListScreenState extends State<ProjectListScreen> {
   bool isLoaded = false;
+  bool showArchived=false;
   var projects;
   String input = "";
   HelperFunction helperFunction = HelperFunction();
@@ -31,8 +32,14 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   //   var thisIsList = context.watch<Data>().listOfTokensNotifier;
   // }
 
+  archiveProject( id,isArchived,index) {
+    context.read<Data>().archiveProject(
+        id, isArchived, index
+    );
+  }
+
   removingFromList(index) {}
-  updatingTheList() async{
+  updatingTheList() async {
     await context.read<Data>().updateProjectListFromServer();
     await context.read<Data>().getTokensDataFromHttp();
   }
@@ -72,6 +79,47 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
           // toolbarHeight: 35,
           leadingWidth: 30,
           automaticallyImplyLeading: false,
+          actions: [
+            IconButton(
+              tooltip: "Show Archived",
+                padding: EdgeInsets.only(right: 20),
+                onPressed: () {
+                  setState(() {
+                    showArchived=!showArchived;
+                  });
+                var   snackBar = SnackBar(
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+
+                  margin: EdgeInsets.only(
+                      left: 10, right: MediaQuery.of(context).size.width/5, bottom: 5),
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Colors.teal[600],
+                    content: Text(showArchived?"Showing Archived Project":"Archived Projects are Hidden",
+                    style: const TextStyle(fontSize: 14),),
+                    duration: const Duration(milliseconds: 1200),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                },
+                icon: Icon(
+
+                !showArchived?  Icons.visibility_outlined:Icons.visibility,
+                  size: 25,
+                  color: Colors.yellow[800],
+                )),
+            IconButton(
+                tooltip: "More",
+                padding: EdgeInsets.only(right: 20),
+                onPressed: () {
+                },
+                icon: Icon(
+
+                 // !showArchived?
+                  Icons.more_vert_outlined,
+                  size: 30,
+                  color: Colors.yellow[800],
+                ))
+          ],
 
           title: Text(
             "Projects",
@@ -119,11 +167,30 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                     //onReorder: reorderData,
                     itemCount: projects.length ?? 0,
                     itemBuilder: (BuildContext context, int index) {
-                      return CardForProject(
+                      return
+
+                        !showArchived?
+                        projects[index]["isArchived"]?Container(
+                      //   padding: EdgeInsets.all(40),
+                      // child:  Text("archived project")
+                      ):
+                        CardForProject(
+                          name: projects[index]["name"] ?? "name",
+                          description:
+                          projects[index]["description"] ?? "description",
+                          projectId: projects[index]["_id"],
+                          index: index,
+                          isArchived: projects[index]["isArchived"],
+                        ):
+                      CardForProject(
                         name: projects[index]["name"] ?? "name",
                         description:
                             projects[index]["description"] ?? "description",
-                        projectId: projects[index]["_id"],index: index,
+                        projectId: projects[index]["_id"],
+                        index: index,
+                        isArchived: projects[index]["isArchived"],
+
+
                       );
                     },
                   ),
@@ -141,8 +208,12 @@ class CardForProject extends StatelessWidget {
   final name;
   final description;
   final projectId;
-  const CardForProject({Key? key, this.name, this.description, this.projectId,this.index})
+final  isArchived;
+  const CardForProject(
+      {Key? key, this.name, this.description, this.projectId, this.index, this.isArchived,})
       : super(key: key);
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -199,38 +270,31 @@ class CardForProject extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  child:
-                  PopupMenuButton<String>(
-
+                  child: PopupMenuButton<String>(
                     onSelected: (String value) {
-
                       if (value == "Details") {
-                        Navigator.push(context, MaterialPageRoute(builder: (context){
-                          return  ProjectPage(
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return ProjectPage(
                             projectId: projectId,
                             index: index,
                             projectName: name,
                             projectDescription: description,
-
+                            isArchived: isArchived,
                           );
                         }));
-
                       }
+
                     },
                     icon: const Icon(
                       Icons.more_horiz,
                       size: 30,
                     ),
                     itemBuilder: (BuildContext context) =>
-                    <PopupMenuEntry<String>>[
+                        <PopupMenuEntry<String>>[
                       const PopupMenuItem<String>(
                         value: 'Add members',
                         child: Text('Add members'),
-                      ),
-
-                      const PopupMenuItem<String>(
-                        value: 'Archive',
-                        child: Text('Archive Project'),
                       ),
                       const PopupMenuItem<String>(
                         value: 'Details',
@@ -247,8 +311,7 @@ class CardForProject extends StatelessWidget {
                 ),
               ],
             ),
-          )
-      ),
+          )),
     );
   }
 }

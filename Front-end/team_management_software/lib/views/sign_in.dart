@@ -1,10 +1,10 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:team_management_software/constants.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:sizer/sizer.dart';
 import 'package:team_management_software/controller/http_functions.dart';
+import 'package:team_management_software/controller/shared_prefernce_functions.dart';
 import 'package:team_management_software/views/home_screen.dart';
 import 'package:team_management_software/views/screens/bottom_navigation.dart';
 import 'package:team_management_software/views/sign_up.dart';
@@ -20,6 +20,8 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+
+  SharedPreferencesFunctions sharedPreferencesFunctions=SharedPreferencesFunctions();
   Constants constants=Constants();
 
   bool showSpinner = false;
@@ -40,16 +42,16 @@ class _SignInPageState extends State<SignInPage> {
    if(finalData["status"]=="true"){
      final snackBar = SnackBar(content: Text("Sign in successful"),duration: Duration(milliseconds: 500),);
      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-     Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+     SharedPreferencesFunctions.setIsUserLoggedIn(true);
+     SharedPreferencesFunctions.saveUserName(userNameController.text);
+     Navigator.push(context, MaterialPageRoute(builder: (context)=>BottomNavigation()));
    }else{
      final snackBar = SnackBar(content: Text("Invalid credentials"),duration: Duration(milliseconds: 1000),);
      ScaffoldMessenger.of(context).showSnackBar(snackBar);
    }
-
       // final snackBar = SnackBar(content: Text("Sign in successful"),duration: Duration(milliseconds: 500),);
       // ScaffoldMessenger.of(context).showSnackBar(snackBar);
       // Navigator.push(context, MaterialPageRoute(builder: (context)=>BottomNavigation()));
-
     }
 
     setState(() {

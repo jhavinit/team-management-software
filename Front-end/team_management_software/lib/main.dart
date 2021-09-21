@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:team_management_software/controller/shared_prefernce_functions.dart';
 import 'package:team_management_software/test_screen2.dart';
 import 'package:team_management_software/views/home_screen.dart';
 import 'package:team_management_software/views/project_list_screen.dart';
@@ -15,6 +16,7 @@ import 'package:team_management_software/views/user_sign_up.dart';
 import 'change_notifier.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,9 +28,27 @@ Future<void> main() async{
   runApp( MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+bool userIsLoggedIn=false;
+  isUserLoggedIn()async {
+    userIsLoggedIn = await SharedPreferencesFunctions.getIsUserLoggedIn();
+    setState(() {
+    });
+  }
+
+  @override
+  void initState() {
+    isUserLoggedIn();
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Sizer(
@@ -52,7 +72,11 @@ class MyApp extends StatelessWidget {
             //   primaryColor:Colors.yellow[800],
             //   splashColor: Colors.yellow[800],
             // ),
-            home:  SplashScreen()));
+            home:
+            //BottomNavigation()
+
+            userIsLoggedIn==null||userIsLoggedIn!=true? SplashScreen(): BottomNavigation()
+            ));
       }
     );
   }

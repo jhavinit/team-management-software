@@ -25,7 +25,7 @@ class _MyTasksState extends State<MyTasks> {
   updateTaskList() async {
     await context
         .read<Data>()
-        .getTasksListFromServerForProject(widget.projectId);
+        .getMyTaskList();
     isLoading = false;
   }
 

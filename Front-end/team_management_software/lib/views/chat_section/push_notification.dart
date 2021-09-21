@@ -7,6 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:team_management_software/change_notifier.dart';
 //import 'package:learning_notifications/testing_shared_preferences.dart';
 import 'package:provider/provider.dart';
+import 'package:team_management_software/controller/shared_prefernce_functions.dart';
 import 'package:team_management_software/views/chat_section/chatting_screen.dart';
 
 //after android 8 every notification should be associated with a channel
@@ -77,18 +78,12 @@ class FirebaseNotification {
             message.notification?.android;
         message.notification?.android;
         if (notification != null && androidNotification != null) {
-          print("message data ${message.data??" "}");
-            print("this is notificaion body ${notification.body??" "}");
+          print("message data ${message.data}");
+            print("this is notification body ${notification.body??" "}");
 
-          Provider.of<Data>(context, listen: false).addToUniqueListFromServer(
-              message.data["message"]??"this is the msg",
-              message.data["type"]??"text",
-              message.data["sendBy"]??"noSendBy",
-              message.data["fileName"] ?? "noFileName",
-             // message.data["timeStamp"]??""
-          );
 
-          bool isLoggedIn =true;
+          bool isLoggedIn = await SharedPreferencesFunctions.getIsUserLoggedIn();
+         // bool isLoggedIn =true;
           //await SharedPrefFunctions.getIsUserLoggedIn();
           if (isLoggedIn == true) {
             // AndroidNotificationDetails notificationDetails =
@@ -115,6 +110,25 @@ class FirebaseNotification {
                     android: AndroidNotificationDetails(
                         channel.id, channel.name, channel.description))
             );
+            print("changes reflecting");
+
+
+            // const snackBar = SnackBar(
+            //   content: Text("Sign Up successful"),
+            //   duration: Duration(milliseconds: 500),
+            //
+            // );
+            // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+
+            Provider.of<Data>(context, listen: false).addToUniqueListFromServer(
+                message.data["message"]??"this is the msg",
+                message.data["type"]??"text",
+                message.data["sendBy"]??"noSendBy",
+              message.data["fileName"]?? "noFileName",
+               // message.data["timeStamp"]??""
+            );
+
 
           }
           else print("cannot display notification");

@@ -49,7 +49,6 @@ class HttpFunctions{
   signInUser({
     String? username,String? password,required role
 }) async{
-
     print("signInUser called with $username and $password");
     var urlUser=Uri.parse("https://ems-heroku.herokuapp.com/users/login");
     var urlAdmin=Uri.parse("https://ems-heroku.herokuapp.com/login");

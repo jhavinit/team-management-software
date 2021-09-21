@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:team_management_software/views/chat_section/coversation_list.dart';
+import 'package:team_management_software/views/chat_section/push_notification.dart';
 import 'package:team_management_software/views/home_screen.dart';
 import 'package:team_management_software/views/screens/account.dart';
-import 'package:team_management_software/views/screens/inbox.dart';
 import 'package:team_management_software/views/screens/my_tasks.dart';
 import 'package:team_management_software/views/screens/search.dart';
 import 'package:team_management_software/views/project_list_screen.dart';
@@ -16,13 +16,21 @@ class BottomNavigation extends StatefulWidget {
 
 /// This is the private State class that goes with MyStatefulWidget.
 class _BottomNavigationState extends State<BottomNavigation> {
+
   int _selectedIndex = 0;
-  final screen = [ProjectListScreen(), MyTasks(projectId: "614606f2f1d7f13cf85209ab",),  ConversationListPage(), SearchList(), Account()];
+  final screen = [const ProjectListScreen(), MyTasks(projectId: "614606f2f1d7f13cf85209ab",),  ConversationListPage(), SearchList(), const Account()];
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    FirebaseNotification().initialise(context);
+    // TODO: implement initState
+    super.initState();
   }
 
   @override

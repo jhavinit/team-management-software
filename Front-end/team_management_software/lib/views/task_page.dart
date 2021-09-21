@@ -175,8 +175,8 @@ class _TaskPageState extends State<TaskPage> {
             itemBuilder: (BuildContext context, int index) {
               return ListTile(
                 onTap: (){
-                  widget.isAssigned=true;
-                  widget.assignedTo=usersListForAssign[index]["fullName"]!;
+                  isAssigned=true;
+                  assignedTo=usersListForAssign[index]["fullName"]!;
                   setState(() {
                   });
                   Navigator.pop(context);
@@ -231,10 +231,12 @@ class _TaskPageState extends State<TaskPage> {
       "status":selectedStatus,
       "isAssigned":isAssigned
     };
+    print(dataToUpdate);
 
     context.read<Data>().updateIndividualTask(
       index: widget.index,
-      projectId: widget.projectId,taskId: widget.taskId,
+      projectId: widget.projectId,
+        taskId: widget.taskId,
       priority: selectedPriority,
       status: selectedStatus,
       taskDescription:taskDescriptionController.text ,
@@ -467,7 +469,7 @@ class _TaskPageState extends State<TaskPage> {
                                 Container(
                                   width: 100,
                                   child: Text(
-                                    widget.isAssigned  ? widget.assignedTo: "Unassigned",
+                                    isAssigned  ? assignedTo: "Unassigned",
                                     style:  widget.isAssigned
                                         ? const TextStyle(
                                             color: Colors.black,

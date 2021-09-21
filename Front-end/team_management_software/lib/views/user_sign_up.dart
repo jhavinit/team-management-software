@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:team_management_software/controller/http_functions.dart';
+import 'package:team_management_software/controller/shared_prefernce_functions.dart';
 import 'package:team_management_software/views/chat_section/push_notification.dart';
 import 'package:team_management_software/views/components/role_dropdown.dart';
 import 'package:team_management_software/views/project_list_screen.dart';
@@ -66,6 +67,8 @@ var token="";
       if(signUpResponse){
         const snackBar =   SnackBar(content: Text("Sign Up successful"),duration: Duration(milliseconds: 500),);
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        SharedPreferencesFunctions.setIsUserLoggedIn(true);
+        SharedPreferencesFunctions.saveUserName(nameController.text);
         Navigator.push(context, MaterialPageRoute(builder: (context)=>BottomNavigation()));
       }else{
         const snackBar = SnackBar(content: Text("Unable to sign up"),duration: Duration(milliseconds: 1000),);

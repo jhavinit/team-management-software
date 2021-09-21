@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:team_management_software/controller/http_functions.dart';
+import 'package:team_management_software/controller/shared_prefernce_functions.dart';
 import 'package:team_management_software/views/components/role_dropdown.dart';
 import 'package:team_management_software/views/sign_in.dart';
 import 'package:sizer/sizer.dart';
@@ -66,6 +67,9 @@ class _SignUpPageState extends State<SignUpPage> {
           duration: Duration(milliseconds: 500),
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        SharedPreferencesFunctions.setIsUserLoggedIn(true);
+        SharedPreferencesFunctions.saveUserName(nameController.text);
+
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomeScreen()));
       }

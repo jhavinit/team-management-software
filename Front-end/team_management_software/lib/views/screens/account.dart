@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:team_management_software/controller/shared_prefernce_functions.dart';
 import 'package:team_management_software/views/screens/profileinfo.dart';
 import 'package:team_management_software/views/welcome_screen.dart';
 
@@ -189,6 +190,7 @@ class _AccountState extends State<Account> {
             ),
             GestureDetector(
               onTap: (){
+                SharedPreferencesFunctions.setIsUserLoggedIn(false);
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
                   return WelcomeScreen();
                 }));

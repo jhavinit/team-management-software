@@ -6,31 +6,27 @@ import 'package:team_management_software/controller/helper_function.dart';
 class Data with ChangeNotifier {
   HelperFunction helperFunction = HelperFunction();
   List listOfMessagesNotifier = [];
+  List listOfMyTasksNotifier=[];
   List listOfTokensNotifier = [];
   List listOfProjectsNotifier = [];
   List taskListNotifier = [
-    // {
-    //   "taskname": "trialTask",
-    //   "description": "desc",
-    //   "isCompleted": false,
-    //   "isArchived": false,
-    //   "isAssigned": true,
-    //   "assignedTo": "Vikash",
-    //   "assignedBy": "Rohit",
-    //   "dueDate": "2021-10-20T00:00:00.000Z",
-    //   "priority": 1,
-    //   "status": 2,
-    // }
   ];
   List taskListOfParticularProjectNotifier=[];
   List taskMembersOfParticularProjectNotifier=[];
   var allDetailsOfProjects;
+  String key = "";
+  bool loadingScreen = false;
+  bool isLoadingContent = false;
   getTaskListAndMemberListForProject(index){
-    print(taskMembersOfParticularProjectNotifier);
-    taskMembersOfParticularProjectNotifier=allDetailsOfProjects["message"][index]["members"];
-    taskListOfParticularProjectNotifier=allDetailsOfProjects["message"][index]["tasks"];
+    //print(taskMembersOfParticularProjectNotifier);
+   taskMembersOfParticularProjectNotifier=allDetailsOfProjects["message"][index]["members"];
+   taskListOfParticularProjectNotifier=allDetailsOfProjects["message"][index]["tasks"];
     notifyListeners();
 
+  }
+  getMyTaskList()async{
+    taskListNotifier=await helperFunction.getAllTasksOfUser();
+    notifyListeners();
   }
 
   getTasksListFromServerForProject(projectId) async {
@@ -83,6 +79,15 @@ class Data with ChangeNotifier {
     await helperFunction.updateTask(projectId, taskId, dataToSend);
   }
 
+  archiveProject(projectId,bool isArchived,int index){
+    listOfProjectsNotifier[index]["isArchived"]=isArchived;
+    notifyListeners();
+   var dataToSend={
+      "isArchived":isArchived
+    };
+    helperFunction.updateProject(projectId: projectId, dataToSend: dataToSend);
+
+  }
 
   updateIndividualProject(
       {required projectId,
@@ -112,6 +117,17 @@ class Data with ChangeNotifier {
     await getTasksListFromServerForProject(projectId);
   }
 
+  addMemberToList(memberName,projectId)async{
+    print("adding");
+    taskMembersOfParticularProjectNotifier.add({
+      "memberName":memberName
+    });
+    notifyListeners();
+    await helperFunction.addMemberToProject(memberName, projectId);
+  }
+
+
+
   addTaskInNotifier(
       {required taskName,
       required taskDescription,
@@ -122,9 +138,9 @@ class Data with ChangeNotifier {
         required status
       }) {
     var newTask = {
-      "assignedBy":"newUser",
+      "assignedBy":"User1",
       "taskname": taskName,
-      "description": taskDescription ?? "not added",
+      "description": taskDescription ?? "Add description..",
       "isCompleted": false,
       "dueDate": dueDate,
       "priority": priority,
@@ -132,16 +148,14 @@ class Data with ChangeNotifier {
       "isAssigned": true,
       "assignedTo": assignedTo
     };
-    print("adding task");
+    print("adding task to $assignedTo");
 
     taskListNotifier.add(newTask);
     notifyListeners();
     addTaskToProject(projectId, newTask);
   }
 
-  String key = "";
-  bool loadingScreen = false;
-  bool isLoadingContent = false;
+
   toggleLoading() {
     loadingScreen = !loadingScreen;
     notifyListeners();
@@ -184,10 +198,10 @@ class Data with ChangeNotifier {
     // await SecureStorageFunction.getDataFromSharedPref(key);
     // notifyListeners();
   }
-  updateMessageListFromServer(userName) async {
+  updateMessageListFromServer(userName,myName) async {
     print("updating message from notifier");
     listOfMessagesNotifier =
-        await helperFunction.getAllMessagesByUserName(userName);
+        await helperFunction.getAllMessagesByUserName(userName,myName);
     notifyListeners();
   }
 
@@ -201,6 +215,7 @@ class Data with ChangeNotifier {
   addToUniqueListFromServer(
       text, String type, String sendBy, String fileName) async {
     // listOfMessagesNotifier=[{"msg":"first text"}];
+    print("in the adding list");
     var newMessage = {
       "message": text,
       "sendBy": sendBy,
@@ -208,7 +223,8 @@ class Data with ChangeNotifier {
       "fileName": fileName,
       // "timeStamp": timeStamp.toString()
     };
-    //print(newMessage);
+    print("the key is $key amd send by is $sendBy");
+    // print(newMessage);
     if (key == sendBy) {
       listOfMessagesNotifier.add(newMessage);
       notifyListeners();
@@ -254,10 +270,10 @@ class Data with ChangeNotifier {
     // await SecureStorageFunction.saveTokensDataToSharedPrefs(
     //     listOfTokensNotifier);
   }
-
-  getAllMessagesByUserName(String userName) async {
-    listOfMessagesNotifier =
-        await helperFunction.getAllMessagesByUserName(userName);
-    notifyListeners();
-  }
+  //
+  // getAllMessagesByUserName(String userName) async {
+  //   listOfMessagesNotifier =
+  //       await helperFunction.getAllMessagesByUserName(userName);
+  //   notifyListeners();
+  // }
 }
