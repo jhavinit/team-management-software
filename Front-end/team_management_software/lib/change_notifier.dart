@@ -9,23 +9,24 @@ class Data with ChangeNotifier {
   List listOfMyTasksNotifier=[];
   List listOfTokensNotifier = [];
   List listOfProjectsNotifier = [];
-  List taskListNotifier = [
-  ];
+  List taskListNotifier = [];
   List taskListOfParticularProjectNotifier=[];
   List taskMembersOfParticularProjectNotifier=[];
-  var allDetailsOfProjects;
+  var allDetailsOfProjects={};
   String key = "";
   bool loadingScreen = false;
   bool isLoadingContent = false;
   getTaskListAndMemberListForProject(index){
     //print(taskMembersOfParticularProjectNotifier);
-   taskMembersOfParticularProjectNotifier=allDetailsOfProjects["message"][index]["members"];
-   taskListOfParticularProjectNotifier=allDetailsOfProjects["message"][index]["tasks"];
+   // print(allDetailsOfProjects);
+   taskMembersOfParticularProjectNotifier=allDetailsOfProjects["projects"][index]["members"];
+   taskListOfParticularProjectNotifier=allDetailsOfProjects["projects"][index]["tasks"];
     notifyListeners();
 
   }
-  getMyTaskList()async{
-    taskListNotifier=await helperFunction.getAllTasksOfUser();
+
+  getMyTaskList() async{
+    listOfMyTasksNotifier=await helperFunction.getAllTasksOfUser();
     notifyListeners();
   }
 
@@ -42,13 +43,28 @@ class Data with ChangeNotifier {
     //send a patch req   /projects/id/tasks/taskId
     helperFunction.updateTask(projectId, taskId, dataToSend);
   }
+  updateMyTaskList(index,projectId,taskId,dataToSend){
+    listOfMyTasksNotifier[index]["isCompleted"]=!listOfMyTasksNotifier[index]["isCompleted"];
+    notifyListeners();
+    helperFunction.updateTask(projectId, taskId, dataToSend);
+
+  }
 
   marksTaskAsComplete({required index,
     required projectId,
     required taskId,
-    required isCompleted
+    required isCompleted,
+    required isMyTask
   }) {
-    taskListNotifier[index]["isCompleted"]= !taskListNotifier[index]["isCompleted"];
+    if(isMyTask==true){
+      listOfMyTasksNotifier[index]["isCompleted"] =
+      !listOfMyTasksNotifier[index]["isCompleted"];
+
+    }
+    else {
+      taskListNotifier[index]["isCompleted"] =
+          !taskListNotifier[index]["isCompleted"];
+    }
     notifyListeners();
     var dataToSend={
       "isCompleted":isCompleted
@@ -66,14 +82,26 @@ class Data with ChangeNotifier {
       required dueDate,
       required priority,
       required status,
-      required index})
+      required index,
+      required isMyTask})
   async{
-    taskListNotifier[index]["taskname"] = taskName;
-    taskListNotifier[index]["taskDescription"] = taskDescription;
-    taskListNotifier[index]["assignedTo"] = assignedTo;
-    taskListNotifier[index]["dueDate"] = dueDate;
-    taskListNotifier[index]["priority"] = priority;
-    taskListNotifier[index]["status"] = status;
+    if(isMyTask==true){
+      listOfMyTasksNotifier[index]["taskname"] = taskName;
+      listOfMyTasksNotifier[index]["taskDescription"] = taskDescription;
+      listOfMyTasksNotifier[index]["assignedTo"] = assignedTo;
+      listOfMyTasksNotifier[index]["dueDate"] = dueDate;
+      listOfMyTasksNotifier[index]["priority"] = priority;
+      listOfMyTasksNotifier[index]["status"] = status;
+    }
+    else
+    {
+      taskListNotifier[index]["taskname"] = taskName;
+      taskListNotifier[index]["taskDescription"] = taskDescription;
+      taskListNotifier[index]["assignedTo"] = assignedTo;
+      taskListNotifier[index]["dueDate"] = dueDate;
+      taskListNotifier[index]["priority"] = priority;
+      taskListNotifier[index]["status"] = status;
+    }
 
     notifyListeners();
     await helperFunction.updateTask(projectId, taskId, dataToSend);
@@ -96,13 +124,16 @@ class Data with ChangeNotifier {
         required isArchived,
         required isDeleted,
         required dataToSend,
-        required index}
+        required index,
+        required isFav
+      }
       ){
     listOfProjectsNotifier[index]["name"]=projectName;
     listOfProjectsNotifier[index]["description"]=projectDescription;
     listOfProjectsNotifier[index]["isArchived"]=isArchived;
     listOfProjectsNotifier[index]["isActive"]=isDeleted;
     listOfProjectsNotifier[index]["dataToSend"]=dataToSend;
+    listOfProjectsNotifier[index]["isFav"]=isFav;
 
     notifyListeners();
     helperFunction.updateProject(projectId: projectId, dataToSend: dataToSend);
@@ -110,11 +141,13 @@ class Data with ChangeNotifier {
   }
 
   addTaskToProject(projectId, taskData) async {
+    toggleLoading();
     print("adding task to projectId $projectId");
     //send post req to project id
     await helperFunction.addTaskToProject(projectId, taskData);
-    notifyListeners();
+    //notifyListeners();
     await getTasksListFromServerForProject(projectId);
+    toggleLoading();
   }
 
   addMemberToList(memberName,projectId)async{
@@ -136,7 +169,8 @@ class Data with ChangeNotifier {
         required assignedTo,
         required priority,
         required status
-      }) {
+      }) async{
+
     var newTask = {
       "assignedBy":"User1",
       "taskname": taskName,
@@ -149,10 +183,10 @@ class Data with ChangeNotifier {
       "assignedTo": assignedTo
     };
     print("adding task to $assignedTo");
-
     taskListNotifier.add(newTask);
     notifyListeners();
-    addTaskToProject(projectId, newTask);
+    await addTaskToProject(projectId, newTask);
+
   }
 
 
@@ -166,10 +200,12 @@ class Data with ChangeNotifier {
   }
 
   addProjectToList(projectDetails) async {
-    listOfProjectsNotifier.add(projectDetails);
-    notifyListeners();
+    // listOfProjectsNotifier.add(projectDetails);
+    // notifyListeners();
+    toggleLoading();
     await helperFunction.addProjectToDatabase(projectDetails);
     await updateProjectListFromServer();
+    toggleLoading();
   }
 
   removeProjectFromList(index) {
@@ -178,12 +214,13 @@ class Data with ChangeNotifier {
   }
 
   updateProjectListFromServer() async {
-    listOfProjectsNotifier =await helperFunction.getAllProjectDetails2();
-    var tempList= await helperFunction.getAllProjectDetails();
-    allDetailsOfProjects=tempList;print(allDetailsOfProjects["message"][0]["tasks"]);
+   // listOfProjectsNotifier =await helperFunction.getAllProjectDetails2();
+   allDetailsOfProjects= await helperFunction.getAllProjectDetails().then((value) {
+     // print("the value is $value");
+      listOfProjectsNotifier=value["projects"];
+      return value;
+    });
 
-    // taskListOfParticularProjectNotifier=tempList["message"]["tasks"];
-    // taskMembersOfParticularProjectNotifier=tempList["message"]["members"];
     notifyListeners();
   }
 

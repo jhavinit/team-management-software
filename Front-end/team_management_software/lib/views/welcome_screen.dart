@@ -8,8 +8,6 @@ import '../constants.dart';
 
 class WelcomeScreen extends StatelessWidget {
 
-
-
   Future<void> _dialogToChooseRole(context,bool isSignUp) async {
 
     return showDialog<void>(
@@ -35,18 +33,18 @@ class WelcomeScreen extends StatelessWidget {
                       GestureDetector(
                         onTap: (){
                           Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                              isSignUp?SignUpPage():SignInPage(role:"user") ));
+                              isSignUp?SignUpPage():SignInPage(role:"admin") ));
                        //   Navigator.pop(context);
                         },
                         child:Container(
                           padding:EdgeInsets.only(bottom: 5),
-                          child:Constants.kWidgetForStatusAndPriority(isSignUp?"Admin Sign Up":"Admin Sign In", Colors.teal[400]),
+                          child:Constants.kWidgetForStatusAndPriority(isSignUp?"Admin Sign Up":"Admin Sign In", Colors.green[200]),
                         )
                       ),
                       GestureDetector(
                         onTap: (){
                           Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                              isSignUp?UserSignUp():SignInPage(role:"admin") ));
+                              isSignUp?UserSignUp():SignInPage(role:"user") ));
                          // Navigator.pop(context);
                         },
                         child:  Constants.kWidgetForStatusAndPriority(isSignUp?"User Sign Up":"User Sign In",  Constants.buttonColor,),

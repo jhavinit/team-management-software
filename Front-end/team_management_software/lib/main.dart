@@ -21,7 +21,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+  SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.black, // navigation bar color
     //statusBarColor: Colors.black, // status bar color
   ));
@@ -74,6 +75,7 @@ bool userIsLoggedIn=false;
             // ),
             home:
             //BottomNavigation()
+        // Home()
 
             userIsLoggedIn==null||userIsLoggedIn!=true? SplashScreen(): BottomNavigation()
             ));

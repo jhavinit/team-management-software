@@ -6,6 +6,7 @@ import 'package:team_management_software/views/screens/account.dart';
 import 'package:team_management_software/views/screens/my_tasks.dart';
 import 'package:team_management_software/views/screens/search.dart';
 import 'package:team_management_software/views/project_list_screen.dart';
+import 'package:team_management_software/controller/http_functions.dart';
 
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({Key? key}) : super(key: key);
@@ -25,10 +26,16 @@ class _BottomNavigationState extends State<BottomNavigation> {
       _selectedIndex = index;
     });
   }
+  getToken()async{
+   // FirebaseNotification().getToken().then((value) =>
+   //     HttpFunctions().updateTokenOfUserOnSignIn(value)
+   // );
+  }
 
   @override
   void initState() {
     FirebaseNotification().initialise(context);
+    getToken();
     // TODO: implement initState
     super.initState();
   }

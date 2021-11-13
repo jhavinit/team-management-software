@@ -60,12 +60,12 @@ class _ConversationListPageState extends State<ConversationListPage> {
 
           title: Text("Conversations",style: TextStyle(color: Colors.yellow[800],fontWeight: FontWeight.w300,fontSize: 25),),
         backgroundColor: Colors.black,
-        actions: [
-          IconButton(onPressed: (){
-         // helperFunction.sendNotificationTrial(token, message, name)
-          //helperFunction.sendDeviceTokenToDatabase();
-
-        }, icon: const Icon(Icons.logout))],
+        // actions: [
+        //   IconButton(onPressed: (){
+        //  // helperFunction.sendNotificationTrial(token, message, name)
+        //   //helperFunction.sendDeviceTokenToDatabase();
+        //
+        // }, icon: const Icon(Icons.logout))],
 
         ),
         body: thisIsList.isEmpty?Center(child: CircularProgressIndicator(
@@ -123,7 +123,7 @@ class _ConversationListPageState extends State<ConversationListPage> {
                         ),
                       ),
                     ),
-                    child: UserTile(thisIsList[index]["fullName"]!)
+                    child: UserTile(thisIsList[index]["fullName"]!,thisIsList[index]["email"])
 
                 ),),
               );
@@ -135,7 +135,7 @@ class _ConversationListPageState extends State<ConversationListPage> {
 }
 
 // ignore: non_constant_identifier_names
-UserTile(String name) {
+UserTile(String name,String email) {
   return
   Container(
      // color: Colors.red,
@@ -148,9 +148,11 @@ UserTile(String name) {
             width: 2,
           ),
           const CircleAvatar(
-            backgroundImage: NetworkImage(
-                "https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper.png"),
-            maxRadius: 20,
+            backgroundImage:
+                AssetImage('images/avatarTMS.png'),
+            // NetworkImage(
+            //     "https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper.png"),
+            maxRadius: 22,
           ),
           const SizedBox(
             width: 12,
@@ -165,7 +167,11 @@ UserTile(String name) {
                   style: TextStyle(fontSize: 19, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(
-                  height: 6,
+                  height: 2,
+                ),
+                Text(
+                  email,
+                  style: TextStyle(fontSize: 11,color: Colors.grey[400],fontWeight: FontWeight.w400),
                 ),
                 // Text("Online", style: TextStyle(
                 //     color: Colors.grey.shade600, fontSize: 13),),

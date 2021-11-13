@@ -14,7 +14,7 @@ class ProjectPage extends StatefulWidget {
   String projectDescription;
   int index;
   bool isArchived;
-
+  bool isFav;
 
   ProjectPage(
       {Key? key,
@@ -22,8 +22,8 @@ class ProjectPage extends StatefulWidget {
       required this.projectDescription,
       required this.index,
       required this.projectId,
-      required this.isArchived})
-      : super(key: key);
+      required this.isArchived,required this.isFav}
+  ) : super(key: key);
 
   @override
   _ProjectPageState createState() => _ProjectPageState();
@@ -38,6 +38,7 @@ class _ProjectPageState extends State<ProjectPage> {
   bool editable = false;
   bool isArchived = false;
   String newMember="";
+  bool isFav=false;
 
   updateTaskListAndMembersList() async {
     Future.delayed(Duration.zero, () async {
@@ -52,6 +53,7 @@ class _ProjectPageState extends State<ProjectPage> {
     projectNameController.text = widget.projectName;
     projectDescriptionController.text = widget.projectDescription;
     isArchived = widget.isArchived;
+    isFav=widget.isFav;
     updateTaskListAndMembersList();
 
     super.initState();
@@ -77,6 +79,7 @@ class _ProjectPageState extends State<ProjectPage> {
       "name": projectNameController.text,
       "description": projectDescriptionController.text,
       "isArchived": isArchived,
+      "isFav":isFav
       //"isActive":false,
     };
 
@@ -88,6 +91,7 @@ class _ProjectPageState extends State<ProjectPage> {
           projectDescription: projectDescriptionController.text,
           isDeleted: false,
           projectName: projectNameController.text,
+      isFav: isFav
         );
   }
 
@@ -126,8 +130,10 @@ class _ProjectPageState extends State<ProjectPage> {
                 ),
                 subtitle: Text(usersListForAssign[index]["email"]??"noEmail"),
                 leading:  const CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      "https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper.png"),
+                  backgroundImage:
+                  AssetImage('images/avatarTMS.png'),
+                  // NetworkImage(
+                  //     "https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper.png"),
                 ),
               );
             },
@@ -215,6 +221,12 @@ class _ProjectPageState extends State<ProjectPage> {
                     editable = true;
                     isArchived = !isArchived;
                   });
+                }else if(value=="Fav"){
+                  print("adding to the fav");
+                  setState(() {
+                    isFav=!isFav;
+                    editable=true;
+                  });
                 }
               },
               icon: const Icon(
@@ -237,6 +249,21 @@ class _ProjectPageState extends State<ProjectPage> {
                     ],
                   ),
                 ),
+                PopupMenuItem<String>(
+                  //padding: EdgeInsets.only(left: 20),
+                  value: "Fav",
+                  child: Row(
+                    children: [
+                      Icon(
+                        isFav ? Icons.favorite : Icons.favorite_border_outlined,
+                        color: isFav ? Colors.red : Colors.blueGrey,
+                        size: 30,
+                      ),
+                      Text(isFav ? ' Remove Favourite' : ' Add Favourite'),
+                    ],
+                  ),
+                ),
+
                 PopupMenuItem<String>(
                   value: 'Delete',
                   child: Row(

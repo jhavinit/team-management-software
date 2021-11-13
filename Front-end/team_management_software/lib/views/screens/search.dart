@@ -1,10 +1,9 @@
 // ignore_for_file: unnecessary_this
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:provider/src/provider.dart';
-
 import '../../change_notifier.dart';
-
 class SearchList extends StatefulWidget {
   SearchList({Key? key}) : super(key: key);
   @override
@@ -14,7 +13,7 @@ class SearchList extends StatefulWidget {
 class _SearchListState extends State<SearchList> {
   Widget appBarTitle =  Text(
     "Tap to Search..",
-    style: new TextStyle(color: Colors.white),
+    style:  TextStyle(color: Colors.yellow[800]),
   );
   Icon actionIcon = new Icon(
     Icons.search,
@@ -61,17 +60,17 @@ class _SearchListState extends State<SearchList> {
   void init() {
   // _list = List();
     _list = [];
-    _list.add("Rohit");
     _list.add("Vikash");
     _list.add("Kuhu");
     _list.add("Sukhvir");
-    // _list.add("Flutter");
-    // _list.add("Python");
-    // _list.add("React");
-    // _list.add("Xamarin");
-    // _list.add("Kotlin");
-    // _list.add("Java");
-    // _list.add("RxAndroid");
+    _list.add("Rohit");
+    _list.add("Flutter");
+    _list.add("Python");
+    _list.add("React");
+    _list.add("Xamarin");
+    _list.add("Kotlin");
+    _list.add("Java");
+    _list.add("RxAndroid");
   }
 
   @override
@@ -112,6 +111,7 @@ class _SearchListState extends State<SearchList> {
 
   Widget buildBar(BuildContext context) {
     return  AppBar(
+      backgroundColor: Colors.black,
       automaticallyImplyLeading: false,
         centerTitle: true, title: appBarTitle, actions: <Widget>[
        IconButton(
@@ -120,19 +120,19 @@ class _SearchListState extends State<SearchList> {
           setState(() {
 
             if (this.actionIcon.icon == Icons.search) {
-              this.actionIcon =  const Icon(
+              this.actionIcon =   Icon(
                 Icons.close,
-                color: Colors.white,
+                color: Colors.yellow[800],
               );
               this.appBarTitle =  TextField(
                 controller: _searchQuery,
                 style:  TextStyle(
                   color: Colors.white,
                 ),
-                decoration:  const InputDecoration(
-                    prefixIcon:  Icon(Icons.search, color: Colors.white),
+                decoration:   InputDecoration(
+                    prefixIcon:  Icon(Icons.search, color: Colors.yellow[800]),
                     hintText: "Search...",
-                    hintStyle:  TextStyle(color: Colors.white)),
+                    hintStyle:  TextStyle(color: Colors.yellow[800])),
               );
               _handleSearchStart();
             } else {
@@ -171,7 +171,23 @@ class ChildItem extends StatelessWidget {
   const ChildItem(this.name);
   @override
   Widget build(BuildContext context) {
-    return  ListTile(title:  Text(this.name));
+    return
+      ListTile(
+        //dense: true,
+        //tileColor: Colors.red,
+        horizontalTitleGap: 8,
+        contentPadding: EdgeInsets.symmetric(horizontal:10),
+        title: Text(name,style: TextStyle(fontWeight: FontWeight.w400),
+        ),
+        leading:  const CircleAvatar(
+          radius: 20  ,
+          backgroundImage:
+          AssetImage('images/avatarTMS.png'),
+          // NetworkImage(
+          //     "https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper.png"),
+        ),
+      );
+      //ListTile(title:  Text(this.name));
   }
 }
 

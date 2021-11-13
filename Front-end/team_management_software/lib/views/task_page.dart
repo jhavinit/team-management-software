@@ -22,10 +22,13 @@ class TaskPage extends StatefulWidget {
   bool isAssigned;
   String taskId;
   int index;
+  bool isMyTask;
+  String projectName;
    TaskPage({Key? key,
      required this.assignedBy,required this.assignedTo,required this.status,required this.priority,required this.projectOfTask,
      required this.imageUrl,required this.isCompleted,required this.taskId,required this.index,required this.projectId,
-     required this.taskName,required this.taskDescription,required this.dueDate, required this.isAssigned}) : super(key: key);
+     required this.taskName,required this.taskDescription,required this.dueDate, required this.isAssigned,required this.projectName,
+   required this.isMyTask}) : super(key: key);
   @override
   _TaskPageState createState() => _TaskPageState();
 }
@@ -217,7 +220,7 @@ class _TaskPageState extends State<TaskPage> {
   markingTaskAsComplete(){
     print("markingTask...${isCompleted}");
     context.read<Data>().marksTaskAsComplete(index: widget.index,
-        projectId: widget.projectId, taskId: widget.taskId, isCompleted: isCompleted);
+        projectId: widget.projectId, taskId: widget.taskId, isCompleted: isCompleted,isMyTask: widget.isMyTask);
   }
 
   sendUpdatedTaskData(){
@@ -243,14 +246,10 @@ class _TaskPageState extends State<TaskPage> {
       taskName: taskNameController.text,
       dueDate: selectedDate.toString(),
       assignedTo: assignedTo,
-      dataToSend: dataToUpdate
+      dataToSend: dataToUpdate,
+      isMyTask: widget.isMyTask
     );
-
-
   }
-
-
-
 
   selectDate(BuildContext context) async {
 
@@ -303,9 +302,9 @@ class _TaskPageState extends State<TaskPage> {
                   });
                 });
               },
-              icon: const Icon(
+              icon:  Icon(
                 Icons.done,
-                color: Colors.teal,
+                color: isCompleted?Colors.teal:Colors.black,
                 size: 30,
               ),
             ),
@@ -609,8 +608,8 @@ class _TaskPageState extends State<TaskPage> {
                               ),
                               margin: EdgeInsets.symmetric(vertical: 8,),
                               padding: EdgeInsets.symmetric(vertical: 8,horizontal: 10),
-                              child: const Text(
-                                "TMS frontend",
+                              child:  Text(
+                                widget.projectName,
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w500,

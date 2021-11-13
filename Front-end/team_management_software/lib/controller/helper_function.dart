@@ -121,7 +121,7 @@ class HelperFunction {
     );
     var returnedData=  jsonDecode(response.body);
     print("the returned data of $myName $userName") ;
-    print(returnedData["chats"]) ;
+   // print(returnedData["chats"]) ;
     return returnedData["chats"];
 
   //  print('your response from get user by username ${response.body}');
@@ -247,14 +247,19 @@ class HelperFunction {
   }
   Future getAllTasksOfUser() async {
     var username=await SharedPreferencesFunctions.getUserName();
-    http.Response response = await http.get(Uri.parse(
-        "https://ems-heroku.herokuapp.com/Users/mytasks?username=$username"));
+    var url=Uri.parse(
+        "https://ems-heroku.herokuapp.com/Users/mytasks?username=$username");
+    http.Response response = await http.get(url);
     String data = response.body;
     var finalData = jsonDecode(data);
     //print("this is from handler$finalData");
     print("the response code from get all tasks of a user $username");
-    print(response.body);
-    print(finalData["users"]);
+  //  print(response.body);
+
+    if(finalData["users"]==null){
+      return [];
+    }
+
     return finalData["users"];
   }
 

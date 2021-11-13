@@ -11,6 +11,7 @@ class TaskListItem extends StatefulWidget {
   String dueDate;
   String projectId;
   String taskId;
+  bool isMyTask;
 
   TaskListItem(
       {Key? key,
@@ -20,7 +21,8 @@ class TaskListItem extends StatefulWidget {
       required this.index,
       required this.taskName,
       required this.taskDescription,
-      required this.dueDate})
+      required this.dueDate,
+      required this.isMyTask})
       : super(key: key);
 
   @override
@@ -34,7 +36,7 @@ class _TaskListItemState extends State<TaskListItem> {
     var updatedData={
       "isCompleted":!widget.isChecked
     };
-    await context.read<Data>().updateTaskList(widget.index,widget.projectId,widget.taskId,updatedData);
+    await widget.isMyTask?context.read<Data>().updateMyTaskList(widget.index,widget.projectId,widget.taskId,updatedData):context.read<Data>().updateTaskList(widget.index,widget.projectId,widget.taskId,updatedData);
   }
 
   resolveDate(String date) {

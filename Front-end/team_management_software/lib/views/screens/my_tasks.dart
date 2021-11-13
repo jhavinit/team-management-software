@@ -5,6 +5,7 @@ import 'package:team_management_software/views/components/new_task.dart';
 import 'package:team_management_software/views/components/task_tile.dart';
 import 'package:team_management_software/views/task_page.dart';
 import '../../change_notifier.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class MyTasks extends StatefulWidget {
   String projectId;
@@ -16,25 +17,29 @@ class MyTasks extends StatefulWidget {
 
 class _MyTasksState extends State<MyTasks> {
   var taskList;
-  bool isLoading = true;
+  bool isLoading = false;
+  final RefreshController _refreshController =
+  RefreshController(initialRefresh: false);
 
   getTaskList() {
-    taskList = context.watch<Data>().taskListNotifier;
+    taskList = context.watch<Data>().listOfMyTasksNotifier;
+  }
+
+  refreshFunction() async {
+    print("refreshing");
+    await updateTaskList();
+    _refreshController.refreshCompleted();
   }
 
   updateTaskList() async {
-    await context
-        .read<Data>()
-        .getMyTaskList();
+    await context.read<Data>().getMyTaskList();
     isLoading = false;
   }
 
   @override
   void initState() {
-
-    print(widget.projectId + ".............................................");
-    updateTaskList();
-
+    print(widget.projectId + "...........");
+   updateTaskList();
     super.initState();
   }
 
@@ -47,24 +52,6 @@ class _MyTasksState extends State<MyTasks> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.black,
-          onPressed: () {
-            showModalBottomSheet<void>(
-              isScrollControlled: true,
-              context: context,
-              builder: (BuildContext context) {
-                return CreateTask(
-                  projectId: widget.projectId,
-                );
-              },
-            );
-          },
-          child: Icon(
-            Icons.add_task,
-            color: Colors.yellow[800],
-            size: 35,
-          )),
       appBar: AppBar(
         leadingWidth: 30,
         automaticallyImplyLeading: false,
@@ -84,7 +71,48 @@ class _MyTasksState extends State<MyTasks> {
                 backgroundColor: Colors.black,
               ),
             )
-          : taskList.isEmpty
+          :
+          SmartRefresher(controller: _refreshController,
+            enablePullDown: true,
+            onRefresh: refreshFunction,
+            onLoading: refreshFunction,
+            header: CustomHeader(
+              refreshStyle: RefreshStyle.UnFollow,
+              height: 20,
+              builder: (context, mode) {
+                if (mode == RefreshStatus.refreshing) {
+                  return Container(
+                    height: 20,
+                    child: Column(
+                      children: [
+                        LinearProgressIndicator(
+                          color: Colors.yellow[800],
+                          backgroundColor: Colors.black,
+                          minHeight: 4,
+                        ),
+                        // Expanded(child: Container())
+                      ],
+                    ),
+                  );
+                }
+                else if (mode == RefreshStatus.idle) {
+                  return Container(
+                    child: Row(
+
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("pull to refresh"),
+                          Icon(Icons.arrow_downward)
+                        ]),
+                  );
+                }
+
+                return Container();
+              },
+            ),
+          child:
+
+      taskList.isEmpty
               ? Center(
                   child: Text(
                     "No active task...",
@@ -141,6 +169,7 @@ class _MyTasksState extends State<MyTasks> {
                                             MaterialPageRoute(
                                                 builder: (context) {
                                           return TaskPage(
+                                            isMyTask: true,
                                             projectId: data["projectId"],
                                             index: index,
                                             taskName: data["taskname"] ?? " ",
@@ -163,6 +192,7 @@ class _MyTasksState extends State<MyTasks> {
                                             imageUrl:
                                                 data["attachmentLink"] ?? "",
                                             taskId: data["_id"] ?? "",
+                                            projectName: data["projectName"],
                                           );
                                         }));
                                       },
@@ -175,6 +205,7 @@ class _MyTasksState extends State<MyTasks> {
                                         taskDescription: data["description"],
                                         taskId: taskList[index]["_id"] ?? " ",
                                         projectId: widget.projectId,
+                                        isMyTask: true,
                                       )
 
                                       //  UserTile(thisIsList[index]["fullName"]!)
@@ -196,6 +227,7 @@ class _MyTasksState extends State<MyTasks> {
       //     TaskListItem()
       //   ],
       // ),
+    )
     );
   }
 }

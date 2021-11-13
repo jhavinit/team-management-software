@@ -92,18 +92,6 @@ class _ChattingScreenState extends State<ChattingScreen> {
     }
   }
 
-  addingMessageToList(
-      String text, String type, String fileName) async {
-    if (text != "") {
-      context.read<Data>().addToUniqueList({
-        "message": text,
-        "sendBy": myName,
-        "type": type,
-        "fileName": fileName,
-      }, widget.name!);
-    }
-  }
-
   uploadFileToServer(File imageFile,filename,type)async{
 
       // open a bytestream
@@ -148,6 +136,19 @@ class _ChattingScreenState extends State<ChattingScreen> {
         showSpinner = false;
       });
     }
+
+  addingMessageToList(
+      String text, String type, String fileName) async {
+    if (text != "") {
+      context.read<Data>().addToUniqueList({
+        "message": text,
+        "sendBy": myName,
+        "type": type,
+        "fileName": fileName,
+      }, widget.name!);
+    }
+  }
+
 
 
 

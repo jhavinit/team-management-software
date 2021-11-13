@@ -121,13 +121,15 @@ class FirebaseNotification {
             // ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
 
-            Provider.of<Data>(context, listen: false).addToUniqueListFromServer(
-                message.data["message"]??"this is the msg",
-                message.data["type"]??"text",
-                message.data["sendBy"]??"noSendBy",
-              message.data["fileName"]?? "noFileName",
-               // message.data["timeStamp"]??""
-            );
+
+              Provider.of<Data>(context, listen: false)
+                  .addToUniqueListFromServer(
+                message.data["message"] ?? "this is the msg",
+                message.data["type"] ?? "text",
+                message.data["sendBy"] ?? "noSendBy",
+                message.data["fileName"] ?? "noFileName",
+                // message.data["timeStamp"]??""
+              );
 
 
           }

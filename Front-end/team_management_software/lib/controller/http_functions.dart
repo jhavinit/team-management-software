@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:team_management_software/controller/shared_prefernce_functions.dart';
 
 class HttpFunctions{
 
@@ -57,7 +58,7 @@ class HttpFunctions{
       "password":password,
     };
     var finalData=jsonEncode(dataToSend);
-    http.Response response=await http.post(role=="admin"?urlUser:urlAdmin,
+    http.Response response=await http.post(role=="admin"?urlAdmin:urlUser,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -107,5 +108,29 @@ class HttpFunctions{
 
   }
 
+  updateTokenOfUserOnSignIn(token)async{
+    //todo update the token on sign in
 
-}
+    var username=await SharedPreferencesFunctions.getUserName();
+    print(token);
+    print("updating the token on Sign In from http functions");
+      var url =
+      Uri.parse("https://ems-heroku.herokuapp.com/users/updateToken");
+      var data={
+        "username":username,
+        "token":token
+      };
+      var finalData = jsonEncode(data);
+      var response = await http.patch(url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: finalData);
+      print(response.body);
+      print(response.statusCode);
+    }
+
+
+  }
+
+

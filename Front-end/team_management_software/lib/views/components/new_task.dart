@@ -172,18 +172,16 @@ class _CreateTaskState extends State<CreateTask> {
   }
 
   createNewTask()async{
-    if(taskNameController.text!="" ) {
+    if(taskNameController.text!="" && assignedTo!="" ) {
       if(isPicked){
-        await context.read<Data>().addTaskInNotifier(
-
-            taskName: taskNameController.text,
+         context.read<Data>().addTaskInNotifier(
+           taskName: taskNameController.text,
           taskDescription: taskDescriptionController.text,
           dueDate: selectedDate.toString(),
           projectId: widget.projectId,
           assignedTo:assignedTo,
           priority: selectedPriority,
           status: selectedStatus,
-
         );
         Navigator.pop(context);
       }

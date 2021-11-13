@@ -1,10 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:provider/src/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:loading_indicator/loading_indicator.dart';
-import 'package:team_management_software/views/components/loading_indicator.dart';
+
+import '../change_notifier.dart';
 
 class TestPage extends StatefulWidget {
   const TestPage({Key? key}) : super(key: key);
@@ -14,15 +13,20 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends State<TestPage> {
-  RefreshController _refreshController =
+  final RefreshController _refreshController =
   RefreshController(initialRefresh: true);
+  updatingTheList() async {
+    await context.read<Data>().updateProjectListFromServer();
+    await context.read<Data>().getTokensDataFromHttp();
+  }
 
 
    refreshFunction()async{
      print("refreshing");
 
-   await  Future.delayed(Duration(seconds: 5));
-    _refreshController.refreshCompleted();
+   await  updatingTheList();
+   // Future.delayed(Duration(seconds: 5));
+     _refreshController.refreshCompleted();
 
   }
   @override
@@ -46,7 +50,8 @@ class _TestPageState extends State<TestPage> {
             refreshStyle: RefreshStyle.UnFollow,
             height: 20,
             builder: (context,mode){
-             return Container(
+              if(mode==RefreshStatus.refreshing) {
+                return Container(
                   height: 20,
                   child:
                   Column(
@@ -60,6 +65,14 @@ class _TestPageState extends State<TestPage> {
                     ],
                   ),
               );
+              }else if(mode==RefreshStatus.canRefresh){
+                return Center(child: Text("Leave to refresh"),);
+              }
+              else if(mode==RefreshStatus.idle){
+                return Center(child: Text("Pull to refresh"));
+              }
+
+              return Container();
             },
           ),
           child: ListView.builder(

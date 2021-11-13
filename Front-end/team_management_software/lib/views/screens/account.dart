@@ -29,37 +29,52 @@ class _AccountState extends State<Account> {
       ),
       body: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: Icon(
-                      Icons.account_circle,
-                      size: 100,
+                    child:
+                    Container(
+                      height: 140.0,
+                      width: 140.0,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.green,
+                          image: DecorationImage(
+                              image: new AssetImage("images/avatarTMS.png"),
+                              fit: BoxFit.cover)),
                     ),
+                    // Icon(
+                    //   Icons.account_circle,
+                    //   size: 100,
+                    // ),
                   ),
                   SizedBox(
-                    width: 30,
+                    width: 25,
                     height: 10,
                   ),
                   Column(
+                    mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Username",
+                        "DIC Project",
                         style: TextStyle(fontSize: 26, color: Colors.black),
                       ),
                       SizedBox(
-                        height: 3,
+                        height: 5,
                       ),
-                      Text("Email Id"),
+                      Text(" dic@gmail.com",style: TextStyle(color: Colors.grey),),
                       SizedBox(
-                        height: 3,
+                        height: 8,
                       ),
                       GestureDetector(
                         child: new Text(
-                          "View Profile",
+                          " View Profile",
                           style: TextStyle(color: Colors.yellow[800]),
                         ),
                         onTap: () {
@@ -75,7 +90,7 @@ class _AccountState extends State<Account> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding:  EdgeInsets.only(top: 20,bottom: 10,left: 10),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -95,7 +110,7 @@ class _AccountState extends State<Account> {
                         size: 30,
                       ),
                       title: Text('My Company'),
-                      subtitle: Text('KSVR'),
+                      subtitle: Text('DIC'),
                     ),
                   ],
                 ),
