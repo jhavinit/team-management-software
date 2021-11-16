@@ -26,10 +26,16 @@ class _BottomNavigationState extends State<BottomNavigation> {
       _selectedIndex = index;
     });
   }
-  getToken()async{
-   // FirebaseNotification().getToken().then((value) =>
-   //     HttpFunctions().updateTokenOfUserOnSignIn(value)
-   // );
+  // getToken()async{
+  //  // FirebaseNotification().getToken().then((value) =>
+  //  //     HttpFunctions().updateTokenOfUserOnSignIn(value)
+  //  // );
+  // }
+  getToken() async {
+    FirebaseNotification().getToken().then((value) async{
+    await  HttpFunctions().updateTokenOfUserOnSignIn(value);
+      print(value);
+    });
   }
 
   @override

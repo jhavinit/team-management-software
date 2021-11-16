@@ -102,11 +102,25 @@ class _TaskListScreenState extends State<TaskListScreen> {
         ),
         body: isLoading
             ? Center(
-                child: CircularProgressIndicator(
-                  color: Colors.yellow[800],
-                  backgroundColor: Colors.black,
-                ),
-              )
+              child: Column(
+          // crossAxisAlignment: CrossAxisAlignment.center,
+          // mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text("fetching tasks for...",style: TextStyle(color:Colors.grey[400],fontWeight: FontWeight.w400),),
+                  Text("${widget.projectName}",style: TextStyle(color:Colors.yellow[800],fontWeight:FontWeight.w300,fontSize: 20),),
+                  SizedBox(height:2),
+
+
+
+                  SizedBox(height:10),
+                  CircularProgressIndicator(
+                    color: Colors.yellow[800],
+                    backgroundColor: Colors.black,
+                  ),
+                ],
+              ),
+            )
             : taskList.isEmpty? Center(
           child: Text("No active task...",style: TextStyle(color: Colors.grey),),
         ):Column(

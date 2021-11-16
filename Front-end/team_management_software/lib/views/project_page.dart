@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/src/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../change_notifier.dart';
 import '../constants.dart';
@@ -373,6 +374,32 @@ class _ProjectPageState extends State<ProjectPage> {
                                       Constants.kTextFormFieldDecorationForTask(
                                           "DESCRIPTION "),
                                 ),
+                                Container(
+                                    padding: EdgeInsets.only(
+                                        top: 20, bottom: 10),
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      "LINKS",
+                                      style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: 15),
+                                    )
+                                ),
+                                Container(
+                                  child:InkWell(
+                                      child:  Text('Open Browser'),
+                                      onTap: ()
+                                     async {
+                                       await canLaunch(
+                                            'https://http://flutter.dev')
+                                            ?
+                                        launch(
+                                            'http://flutter.dev')
+                                            : print("cannot launch");
+                                      }
+                                  ),
+                                ),
+
                                 Container(
                                     padding: const EdgeInsets.only(
                                         top: 20, bottom: 10),
