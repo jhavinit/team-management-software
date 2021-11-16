@@ -27,9 +27,9 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   final RefreshController _refreshController2 =
-  RefreshController(initialRefresh: false);
+      RefreshController(initialRefresh: false);
   bool isLoaded = false;
-  bool loadingScreen=false;
+  bool loadingScreen = false;
   bool showArchived = false;
   var projects;
   String input = "";
@@ -37,7 +37,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
   gettingTheList() async {
     projects = context.watch<Data>().listOfProjectsNotifier;
-    loadingScreen=context.watch<Data>().loadingScreen;
+    loadingScreen = context.watch<Data>().loadingScreen;
   }
 
   // getConversationList() async {
@@ -54,6 +54,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
     // Future.delayed(Duration(seconds: 5));
     _refreshController.refreshCompleted();
   }
+
   refreshFunction2() async {
     print("refreshing");
     await updatingTheList();
@@ -75,7 +76,8 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
     isLoaded = true;
     super.didChangeDependencies();
   }
- @override
+
+  @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
@@ -86,16 +88,14 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   void initState() {
     fabController.addListener(() {
       setState(() {
-        fabIsVisible =
-            fabController.position.userScrollDirection == ScrollDirection.forward;
+        fabIsVisible = fabController.position.userScrollDirection ==
+            ScrollDirection.forward;
       });
     });
     super.initState();
     print("hello");
     updatingTheList();
   }
-
-
 
   onProjectItemMenuTap() {}
   void reorderData(int oldindex, int newindex) {
@@ -183,204 +183,223 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                       //width: 50,
                       child: Tab(
                     text: 'All',
-                    height: 40,
+                    //height: 40,
                   )),
-                  Tab(text: 'Favourites', height: 40),
-                  Tab(text: 'Recents', height: 40),
+                  Tab(
+                    text: 'Favourites',
+                  ),
+                  Tab(
+                    text: 'Recents',
+                  ),
                 ],
               ),
             ),
           ),
         ),
-        floatingActionButton:  Visibility(child: CreateNewProject(),
-          visible: fabIsVisible ? true : false),
+        floatingActionButton: Visibility(
+            child: CreateNewProject(), visible: fabIsVisible ? true : false),
         //floatingButtonForNewProject(context),
 
-        body: loadingScreen? Center(
-            child: Container(
-              width: MediaQuery.of(context).size.width/1.3,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+        body: loadingScreen
+            ? Center(
+                child: Container(
+                width: MediaQuery.of(context).size.width / 1.3,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // LinearProgressIndicator(
+                    //
+                    //   color: Colors.yellow[800],
+                    //   backgroundColor: Colors.black,
+                    // ),
+                    Container(
+                        padding: EdgeInsets.only(bottom: 16, top: 16),
+                        child: Text(
+                          "Creating a project... ",
+                          style: TextStyle(
+                              color: Colors.yellow[800],
+                              fontWeight: FontWeight.w400,
+                              fontSize: 15),
+                        )),
+                    LinearProgressIndicator(
+                      color: Colors.yellow[800],
+                      backgroundColor: Colors.black,
+                    ),
+                  ],
+                ),
+              ))
+            : TabBarView(
                 children: [
-                  // LinearProgressIndicator(
-                  //
-                  //   color: Colors.yellow[800],
-                  //   backgroundColor: Colors.black,
-                  // ),
-                  Container(
-                    padding: EdgeInsets.only(bottom: 16,top: 16),
-                      child: Text("Creating a project... ",style: TextStyle(color: Colors.yellow[800],
-                          fontWeight: FontWeight.w400,fontSize: 15),)),
-                  LinearProgressIndicator(
+                  projects.isEmpty
+                      ? Center(
+                          child: CircularProgressIndicator(
+                          color: Colors.yellow[800],
+                          backgroundColor: Colors.black,
+                        ))
+                      : SmartRefresher(
+                          controller: _refreshController,
+                          enablePullDown: true,
+                          onRefresh: refreshFunction,
+                          onLoading: refreshFunction,
+                          header: CustomHeader(
+                            refreshStyle: RefreshStyle.UnFollow,
+                            height: 20,
+                            builder: (context, mode) {
+                              if (mode == RefreshStatus.refreshing) {
+                                return Container(
+                                  height: 20,
+                                  child: Column(
+                                    children: [
+                                      LinearProgressIndicator(
+                                        color: Colors.yellow[800],
+                                        backgroundColor: Colors.black,
+                                        minHeight: 4,
+                                      ),
+                                      // Expanded(child: Container())
+                                    ],
+                                  ),
+                                );
+                              } else if (mode == RefreshStatus.idle) {
+                                return Container(
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text("pull to refresh"),
+                                        Icon(Icons.arrow_downward)
+                                      ]),
+                                );
+                              }
 
-                    color: Colors.yellow[800],
-                    backgroundColor: Colors.black,
-                  ),
+                              return Container();
+                            },
+                          ),
+                          child: ListView.builder(
+                            //controller: fabController,
+                            shrinkWrap: true,
+                            //onReorder: reorderData,
+                            itemCount: projects.length ?? 0,
+                            itemBuilder: (BuildContext context, int index) {
+                              return !showArchived
+                                  ? projects[index]["isArchived"]
+                                      ? Container(
+                                          // padding: EdgeInsets.all(40),
+                                          // child:  Text("archived project")
+                                          )
+                                      : CardForProject(
+                                          name:
+                                              projects[index]["name"] ?? "name",
+                                          description: projects[index]
+                                                  ["description"] ??
+                                              "description",
+                                          projectId: projects[index]["_id"],
+                                          index: index,
+                                          isArchived: projects[index]
+                                              ["isArchived"],
+                                        )
+                                  : CardForProject(
+                                      name: projects[index]["name"] ?? "name",
+                                      description: projects[index]
+                                              ["description"] ??
+                                          "description",
+                                      projectId: projects[index]["_id"],
+                                      index: index,
+                                      isArchived: projects[index]["isArchived"],
+                                    );
+                            },
+                          ),
+                        ),
+
+                  projects.isEmpty
+                      ? Center(
+                          child: CircularProgressIndicator(
+                          color: Colors.yellow[800],
+                          backgroundColor: Colors.black,
+                        ))
+                      : SmartRefresher(
+                          controller: _refreshController2,
+                          enablePullDown: true,
+                          onRefresh: refreshFunction2,
+                          onLoading: refreshFunction2,
+                          header: CustomHeader(
+                            refreshStyle: RefreshStyle.UnFollow,
+                            height: 20,
+                            builder: (context, mode) {
+                              if (mode == RefreshStatus.refreshing) {
+                                return Container(
+                                  height: 20,
+                                  child: Column(
+                                    children: [
+                                      LinearProgressIndicator(
+                                        color: Colors.yellow[800],
+                                        backgroundColor: Colors.black,
+                                        minHeight: 4,
+                                      ),
+                                      // Expanded(child: Container())
+                                    ],
+                                  ),
+                                );
+                              } else if (mode == RefreshStatus.idle) {
+                                return Container(
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: const [
+                                        Text("pull to refresh"),
+                                        Icon(Icons.arrow_downward)
+                                      ]),
+                                );
+                              }
+
+                              return Container();
+                            },
+                          ),
+                          child: ListView.builder(
+                            // controller: fabController,
+                            shrinkWrap: true,
+                            //onReorder: reorderData,
+                            itemCount: projects.length ?? 0,
+                            itemBuilder: (BuildContext context, int index) {
+                              return !showArchived
+                                  ? projects[index]["isArchived"]
+                                      ? Container()
+                                      : projects[index]["isFav"] ?? false
+                                          ? CardForProject(
+                                              name: projects[index]["name"] ??
+                                                  "name",
+                                              description: projects[index]
+                                                      ["description"] ??
+                                                  "description",
+                                              projectId: projects[index]["_id"],
+                                              index: index,
+                                              isArchived: projects[index]
+                                                  ["isArchived"],
+                                              isFav: projects[index]["isFav"],
+                                            )
+                                          : Container()
+                                  : projects[index]["isFav"] ?? false
+                                      ? CardForProject(
+                                          name:
+                                              projects[index]["name"] ?? "name",
+                                          description: projects[index]
+                                                  ["description"] ??
+                                              "description",
+                                          projectId: projects[index]["_id"],
+                                          index: index,
+                                          isArchived: projects[index]
+                                              ["isArchived"],
+                                          isFav:
+                                              projects[index]["isFav"] ?? false,
+                                        )
+                                      : Container();
+                            },
+                          ),
+                        ),
+                  //third child for tab view
+                  Container()
                 ],
               ),
-            )): TabBarView(
-          children: [
-            projects.isEmpty
-                ? Center(
-                    child: CircularProgressIndicator(
-                    color: Colors.yellow[800],
-                    backgroundColor: Colors.black,
-                  ))
-                : SmartRefresher(
-                    controller: _refreshController,
-                    enablePullDown: true,
-                    onRefresh: refreshFunction,
-                    onLoading: refreshFunction,
-                    header: CustomHeader(
-                      refreshStyle: RefreshStyle.UnFollow,
-                      height: 20,
-                      builder: (context, mode) {
-                        if (mode == RefreshStatus.refreshing) {
-                          return Container(
-                            height: 20,
-                            child: Column(
-                              children: [
-                                LinearProgressIndicator(
-                                  color: Colors.yellow[800],
-                                  backgroundColor: Colors.black,
-                                  minHeight: 4,
-                                ),
-                                // Expanded(child: Container())
-                              ],
-                            ),
-                          );
-                         }
-                        else if (mode == RefreshStatus.idle) {
-                          return Container(
-                            child: Row(
-
-                              mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                              Text("pull to refresh"),
-                              Icon(Icons.arrow_downward)
-                            ]),
-                          );
-                        }
-
-                        return Container();
-                      },
-                    ),
-                    child: ListView.builder(
-                     //controller: fabController,
-                      shrinkWrap: true,
-                      //onReorder: reorderData,
-                      itemCount: projects.length ?? 0,
-                      itemBuilder: (BuildContext context, int index) {
-                        return !showArchived
-                            ? projects[index]["isArchived"]
-                                ? Container(
-                                    // padding: EdgeInsets.all(40),
-                                    // child:  Text("archived project")
-                                    )
-                                : CardForProject(
-                                    name: projects[index]["name"] ?? "name",
-                                    description: projects[index]
-                                            ["description"] ??
-                                        "description",
-                                    projectId: projects[index]["_id"],
-                                    index: index,
-                                    isArchived: projects[index]["isArchived"],
-                                  )
-                            : CardForProject(
-                                name: projects[index]["name"] ?? "name",
-                                description: projects[index]["description"] ??
-                                    "description",
-                                projectId: projects[index]["_id"],
-                                index: index,
-                                isArchived: projects[index]["isArchived"],
-                              );
-                      },
-                    ),
-                  ),
-
-
-            projects.isEmpty
-                ? Center(
-                child: CircularProgressIndicator(
-                  color: Colors.yellow[800],
-                  backgroundColor: Colors.black,
-                ))
-                : SmartRefresher(
-              controller: _refreshController2,
-              enablePullDown: true,
-              onRefresh: refreshFunction2,
-              onLoading: refreshFunction2,
-              header: CustomHeader(
-                refreshStyle: RefreshStyle.UnFollow,
-                height: 20,
-                builder: (context, mode) {
-                  if (mode == RefreshStatus.refreshing) {
-                    return Container(
-                      height: 20,
-                      child: Column(
-                        children: [
-                          LinearProgressIndicator(
-                            color: Colors.yellow[800],
-                            backgroundColor: Colors.black,
-                            minHeight: 4,
-                          ),
-                          // Expanded(child: Container())
-                        ],
-                      ),
-                    );
-                  }
-                  else if (mode == RefreshStatus.idle) {
-                    return Container(
-                      child: Row(
-
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text("pull to refresh"),
-                            Icon(Icons.arrow_downward)
-                          ]),
-                    );
-                  }
-
-                  return Container();
-                },
-              ),
-              child: ListView.builder(
-               // controller: fabController,
-                shrinkWrap: true,
-                //onReorder: reorderData,
-                itemCount: projects.length ?? 0,
-                itemBuilder: (BuildContext context, int index) {
-                  return !showArchived
-                      ? projects[index]["isArchived"]
-                      ? Container()
-                      :projects[index]["isFav"]??false? CardForProject(
-                    name: projects[index]["name"] ?? "name",
-                    description: projects[index]
-                    ["description"] ??
-                        "description",
-                    projectId: projects[index]["_id"],
-                    index: index,
-                    isArchived: projects[index]["isArchived"],
-                    isFav: projects[index]["isFav"],
-                  ):Container()
-
-                       :projects[index]["isFav"]??false? CardForProject(
-                    name: projects[index]["name"] ?? "name",
-                    description: projects[index]["description"] ??
-                        "description",
-                    projectId: projects[index]["_id"],
-                    index: index,
-                    isArchived: projects[index]["isArchived"],
-                    isFav: projects[index]["isFav"]??false,
-                  ):Container();
-                },
-              ),
-            ),
-            //third child for tab view
-            Container()
-          ],
-        ),
       ),
     );
   }
@@ -393,15 +412,15 @@ class CardForProject extends StatelessWidget {
   final projectId;
   final isArchived;
   final isFav;
-  const CardForProject({
-    Key? key,
-    this.name,
-    this.description,
-    this.projectId,
-    this.index,
-    this.isArchived,
-    this.isFav
-  }) : super(key: key);
+  const CardForProject(
+      {Key? key,
+      this.name,
+      this.description,
+      this.projectId,
+      this.index,
+      this.isArchived,
+      this.isFav})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -469,10 +488,10 @@ class CardForProject extends StatelessWidget {
                             projectName: name,
                             projectDescription: description,
                             isArchived: isArchived,
-                            isFav: isFav??false,
+                            isFav: isFav ?? false,
                           );
                         }));
-                      }else if(value=="fav"){
+                      } else if (value == "fav") {
                         // todo add this to fav
 
                       }

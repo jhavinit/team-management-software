@@ -18,15 +18,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> main() async{
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.black, // navigation bar color
     //statusBarColor: Colors.black, // status bar color
   ));
-  runApp( MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -37,49 +36,43 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-bool userIsLoggedIn=false;
-  isUserLoggedIn()async {
+  bool userIsLoggedIn = false;
+  isUserLoggedIn() async {
     userIsLoggedIn = await SharedPreferencesFunctions.getIsUserLoggedIn();
-    setState(() {
-    });
+    setState(() {});
   }
 
   @override
   void initState() {
-    isUserLoggedIn();
+    //isUserLoggedIn();
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    return Sizer(
-      builder: (context, orientation, deviceType) {
-        return
-          MultiProvider(
-            providers: [
-            ChangeNotifierProvider(create: (_)=>Data()),
-        ],
-
-
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-
-            title: 'Flutter Demo',
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
-            // theme:  ThemeData(
-            //   brightness: Brightness.light,
-            //   primaryColor:Colors.yellow[800],
-            //   splashColor: Colors.yellow[800],
-            // ),
-            home:
-            //BottomNavigation()
-        // Home()
-
-            userIsLoggedIn==null||userIsLoggedIn!=true? SplashScreen(): BottomNavigation()
-            ));
-      }
-    );
+    return Sizer(builder: (context, orientation, deviceType) {
+      return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => Data()),
+          ],
+          child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Flutter Demo',
+              theme: ThemeData(
+                primarySwatch: Colors.blue,
+              ),
+              // theme:  ThemeData(
+              //   brightness: Brightness.light,
+              //   primaryColor:Colors.yellow[800],
+              //   splashColor: Colors.yellow[800],
+              // ),
+              home:
+                  //BottomNavigation()
+                  // Home()
+                  SplashScreen()
+              //userIsLoggedIn==null||userIsLoggedIn!=true? SplashScreen(): BottomNavigation()
+              ));
+    });
   }
 }
