@@ -28,6 +28,7 @@ class CourseDetail {
 class _SearchViewState extends State<SearchView> {
   final formKey = GlobalKey<FormState>();
   String? searchTerm;
+  var searchController=TextEditingController();
   Map? mapResponse;
   List? searchResponse;
   Map? mapResponse1;
@@ -50,7 +51,9 @@ class _SearchViewState extends State<SearchView> {
                       children: [
                         SizedBox(
                           width: 250,
-                          child: TextFormField(
+                          child:
+                          TextFormField(
+                            controller: searchController ,
                             style: TextStyle(fontFamily: 'HelveticaBold'),
                             textAlign: TextAlign.center,
                             decoration: InputDecoration(
@@ -89,31 +92,35 @@ class _SearchViewState extends State<SearchView> {
                           child: MaterialButton(
                               textColor: Colors.purple,
                               onPressed: () async {
-                                final form = formKey.currentState;
-                                if (form!.validate()) {
-                                  form.save();
-                                  Response searchCourse;
+
+                                // final form = formKey.currentState;
+                                // if (form!.validate()) {
+                                //   form.save();
+                                //   Response searchCourse;
+                                //   var url = Uri.parse(
+                                //       'https://www.udemy.com/api-2.0/courses/?search=${searchTerm}');
+                                //   const String Client_id =
+                                //       '8A5zSXdl0Zqw9msZT8zjIunfJnxm8NMHB8jkxY84';
+                                //   const String Client_Secret =
+                                //       'QjjfkknVPfRBWJnJDMiCwEswkIevljW4JlendE1gv3nJbBjYDsXPV79Prz4dR7B58KYb5rDUicbCksxAP2NSZrpui4qlDyPas1K93R3D5Jfd7OT5B4eml1g8T7O8F3oH';
+                                //   String auth = base64.encode(
+                                //       utf8.encode('$Client_id:$Client_Secret'));
+                                //   searchCourse = await http.get(url, headers: {
+                                //     "Authorization": "Basic " + auth
+                                //   });
                                   var url = Uri.parse(
-                                      'https://www.udemy.com/api-2.0/courses/?search=${searchTerm}');
-                                  const String Client_id =
-                                      '8A5zSXdl0Zqw9msZT8zjIunfJnxm8NMHB8jkxY84';
-                                  const String Client_Secret =
-                                      'QjjfkknVPfRBWJnJDMiCwEswkIevljW4JlendE1gv3nJbBjYDsXPV79Prz4dR7B58KYb5rDUicbCksxAP2NSZrpui4qlDyPas1K93R3D5Jfd7OT5B4eml1g8T7O8F3oH';
-                                  String auth = base64.encode(
-                                      utf8.encode('$Client_id:$Client_Secret'));
-                                  searchCourse = await http.get(url, headers: {
-                                    "Authorization": "Basic " + auth
-                                  });
+                                      'https://ems-heroku.herokuapp.com/projects/search?name=tms');
+                                  var searchCourse = await http.get(url);
                                   if (searchCourse.statusCode == 200) {
                                     setState(() {
                                       mapResponse =
                                           json.decode(searchCourse.body);
-                                      searchResponse = mapResponse!['results'];
-                                      //print(searchResponse);
+                                      searchResponse = mapResponse!['data'];
+                                      print(searchResponse);
                                     });
                                   }
-                                }
-                              },
+
+                          },
                               child: Text(
                                 'Search',
                                 style: new TextStyle(
