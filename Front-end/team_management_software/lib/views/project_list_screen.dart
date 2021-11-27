@@ -356,11 +356,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                             },
                           ),
                           child: ListView.builder(
-<<<<<<< Updated upstream
-                            // controller: fabController,
-=======
                             //  controller: fabController,
->>>>>>> Stashed changes
                             shrinkWrap: true,
                             //onReorder: reorderData,
                             itemCount: projects.length ?? 0,
@@ -497,25 +493,6 @@ class CardForProject extends StatelessWidget {
                     ),
                   ),
                 ),
-<<<<<<< Updated upstream
-                Container(
-                  child: PopupMenuButton<String>(
-                    onSelected: (String value) {
-                      if (value == "Details") {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return ProjectPage(
-                            projectId: projectId,
-                            index: index,
-                            projectName: name,
-                            projectDescription: description,
-                            isArchived: isArchived,
-                            isFav: isFav ?? false,
-                          );
-                        }));
-                      } else if (value == "fav") {
-                        // todo add this to fav
-=======
               ),
               Container(
                 child: Column(
@@ -537,7 +514,6 @@ class CardForProject extends StatelessWidget {
                           }));
                         } else if (value == "fav") {
                           // todo add this to fav
->>>>>>> Stashed changes
 
                         }
                       },
@@ -559,19 +535,19 @@ class CardForProject extends StatelessWidget {
                     ),
                     Container(
                       alignment: Alignment.center,
-                     // padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
-                    //  height: 30,width: 50,
+                      // padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+                      //  height: 30,width: 50,
                       // decoration: BoxDecoration(
                       //   shape: BoxShape.rectangle,
                       //   color: Colors.black,
                       //   borderRadius: BorderRadius.circular(14)
                       // ),
                       child: Text(
-                      "70 %",
-                      style: TextStyle(
-                        color: Colors.yellow[800],
-                       // fontWeight: FontWeight.bold,
-                        letterSpacing: -0.5),
+                        "70 %",
+                        style: TextStyle(
+                            color: Colors.yellow[800],
+                            // fontWeight: FontWeight.bold,
+                            letterSpacing: -0.5),
                       ),
                     )
                   ],
