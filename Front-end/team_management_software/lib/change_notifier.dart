@@ -16,11 +16,17 @@ class Data with ChangeNotifier {
   String key = "";
   bool loadingScreen = false;
   bool isLoadingContent = false;
+  bool dnd=false;
+
+  triggerDnd(){
+    dnd=!dnd;
+    notifyListeners();
+  }
   getTaskListAndMemberListForProject(index){
     //print(taskMembersOfParticularProjectNotifier);
    // print(allDetailsOfProjects);
-   taskMembersOfParticularProjectNotifier=allDetailsOfProjects["projects"][index]["members"];
-   taskListOfParticularProjectNotifier=allDetailsOfProjects["projects"][index]["tasks"];
+   taskMembersOfParticularProjectNotifier=allDetailsOfProjects["allProjects"][index]["members"];
+   taskListOfParticularProjectNotifier=allDetailsOfProjects["allProjects"][index]["tasks"];
     notifyListeners();
 
   }
@@ -217,10 +223,9 @@ class Data with ChangeNotifier {
    // listOfProjectsNotifier =await helperFunction.getAllProjectDetails2();
    allDetailsOfProjects= await helperFunction.getAllProjectDetails().then((value) {
      // print("the value is $value");
-      listOfProjectsNotifier=value["projects"];
+      listOfProjectsNotifier=value["allProjects"];
       return value;
     });
-
     notifyListeners();
   }
 

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:team_management_software/controller/shared_prefernce_functions.dart';
@@ -12,6 +14,29 @@ class Account extends StatefulWidget {
 }
 
 class _AccountState extends State<Account> {
+
+  String userName="",email="";
+  bool isLoaded=false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getFromSharedPref();
+    super.initState();
+  }
+
+  getFromSharedPref() async{
+   var userDetails=await  SharedPreferencesFunctions.getUserDetails();
+  var finalData=jsonDecode(userDetails);
+  userName=finalData["username"];
+  email=finalData["email"];
+  setState(() {
+    isLoaded=true;
+  });
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,14 +52,13 @@ class _AccountState extends State<Account> {
         ),
         backgroundColor: Colors.black,
       ),
-      body: SingleChildScrollView(
+      body:  SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(12.0),
@@ -49,10 +73,7 @@ class _AccountState extends State<Account> {
                               image: new AssetImage("images/avatarTMS.png"),
                               fit: BoxFit.cover)),
                     ),
-                    // Icon(
-                    //   Icons.account_circle,
-                    //   size: 100,
-                    // ),
+
                   ),
                   SizedBox(
                     width: 25,
@@ -62,13 +83,13 @@ class _AccountState extends State<Account> {
                     mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "DIC Project",
+                       userName,
                         style: TextStyle(fontSize: 26, color: Colors.black),
                       ),
                       SizedBox(
                         height: 5,
                       ),
-                      Text(" dic@gmail.com",style: TextStyle(color: Colors.grey),),
+                      Text(email,style: TextStyle(color: Colors.grey),),
                       SizedBox(
                         height: 8,
                       ),
@@ -116,50 +137,50 @@ class _AccountState extends State<Account> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Notifications",
-                ),
-              ),
-            ),
-            Container(
-              child: Card(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    const ListTile(
-                      leading: Icon(
-                        Icons.do_disturb_on_outlined,
-                        size: 30,
-                      ),
-                      title: Text('Do not disturb'),
-                      subtitle: Text('Off'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Card(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    const ListTile(
-                      leading: Icon(
-                        Icons.crop_square,
-                        size: 30,
-                      ),
-                      title: Text('Push'),
-                      subtitle: Text('Manage'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: Align(
+            //     alignment: Alignment.centerLeft,
+            //     child: Text(
+            //       "Notifications",
+            //     ),
+            //   ),
+            // ),
+            // Container(
+            //   child: Card(
+            //     child: Column(
+            //       mainAxisSize: MainAxisSize.min,
+            //       children: const <Widget>[
+            //         ListTile(
+            //           leading: Icon(
+            //             Icons.do_disturb_on_outlined,
+            //             size: 30,
+            //           ),
+            //           title: Text('Do not disturb'),
+            //           subtitle: Text('Off'),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            // Container(
+            //   padding: const EdgeInsets.only(bottom: 8),
+            //   child: Card(
+            //     child: Column(
+            //       mainAxisSize: MainAxisSize.min,
+            //       children: <Widget>[
+            //         const ListTile(
+            //           leading: Icon(
+            //             Icons.crop_square,
+            //             size: 30,
+            //           ),
+            //           title: Text('Push'),
+            //           subtitle: Text('Manage'),
+            //         ),
+            //       ],q
+            //     ),
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Align(

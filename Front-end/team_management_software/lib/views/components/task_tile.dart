@@ -17,12 +17,12 @@ class TaskListItem extends StatefulWidget {
       {Key? key,
         required  this.projectId,
         required this.taskId,
-      required this.isChecked,
-      required this.index,
-      required this.taskName,
-      required this.taskDescription,
-      required this.dueDate,
-      required this.isMyTask})
+        required this.isChecked,
+        required this.index,
+        required this.taskName,
+        required this.taskDescription,
+        required this.dueDate,
+        required this.isMyTask})
       : super(key: key);
 
   @override
@@ -32,11 +32,49 @@ class TaskListItem extends StatefulWidget {
 class _TaskListItemState extends State<TaskListItem> {
   String dateToShow = "---";
   var colorToAssign = Colors.black;
-  updateList() async {
+  updateList()  {
     var updatedData={
       "isCompleted":!widget.isChecked
     };
-    await widget.isMyTask?context.read<Data>().updateMyTaskList(widget.index,widget.projectId,widget.taskId,updatedData):context.read<Data>().updateTaskList(widget.index,widget.projectId,widget.taskId,updatedData);
+     widget.isMyTask?context.read<Data>().
+    updateMyTaskList(widget.index,widget.projectId,widget.taskId,updatedData):
+    context.read<Data>().updateTaskList(widget.index,widget.projectId,widget.taskId,updatedData);
+    var snackBar = SnackBar(
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      margin: EdgeInsets.only(
+          left: 10,
+          right: 10,
+          //MediaQuery.of(context).size.width / 3,
+          bottom: 20),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.black,
+      content: Row(
+
+        children: [
+          Text(
+            "Congratulations, completed  ",
+            style:  TextStyle(fontSize: 14,color: Colors.white),
+          ),
+          Flexible(
+              child: RichText(
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    text: "${widget.taskName}",
+                    style: TextStyle(fontSize: 18,color: Colors.yellow[800])
+                  ))),
+
+          // Text(
+          //   "${widget.taskName} !",
+          //   style:  TextStyle(fontSize: 18,color: Colors.yellow[800]),
+          // ),
+        ],
+      ),
+      duration: const Duration(milliseconds: 1500),
+    );
+    !widget.isChecked?
+    ScaffoldMessenger.of(context).showSnackBar(snackBar):null;
+
   }
 
   resolveDate(String date) {

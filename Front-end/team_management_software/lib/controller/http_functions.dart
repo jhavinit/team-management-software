@@ -57,15 +57,24 @@ class HttpFunctions{
       "username":username,
       "password":password,
     };
-    var finalData=jsonEncode(dataToSend);
+    var finalDataToSend=jsonEncode(dataToSend);
     http.Response response=await http.post(role=="admin"?urlAdmin:urlUser,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: finalData
+        body: finalDataToSend
     );
     print("this is response");
-    print(response.body);
+   // print(response.body);
+    String data = response.body;
+    var finalDataReceived = jsonDecode(data);
+    if(finalDataReceived["status"]==true){
+   //save to shared pref
+     await SharedPreferencesFunctions.saveUserDetails(jsonEncode(finalDataReceived["user"]));
+     // print("saved data from shared pref is ${finalDataReceived["user"]}");
+    }
+
+
     return response.body;
   }
 

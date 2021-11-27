@@ -16,6 +16,7 @@ class MyTasks extends StatefulWidget {
 }
 
 class _MyTasksState extends State<MyTasks> {
+  bool showCompleted=false;
   var taskList;
   bool isLoading = false;
   final RefreshController _refreshController =
@@ -51,8 +52,46 @@ class _MyTasksState extends State<MyTasks> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+              tooltip: "Show Archived",
+              padding: EdgeInsets.only(right: 20),
+              onPressed: () {
+                setState(() {
+               showCompleted=!showCompleted;
+                });
+                var snackBar = SnackBar(
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  margin: EdgeInsets.only(
+                      left: 10,
+                      right: 10,
+                      //MediaQuery.of(context).size.width / 3,
+                      bottom: 10),
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Colors.teal[600],
+                  content: Text(
+                    showCompleted
+                       ? "Showing all Tasks"
+                       :
+                  "Completed Tasks are hidden",
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                  duration: const Duration(milliseconds: 1200),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              },
+              icon: Icon(
+               !showCompleted ?
+               Icons.visibility_outlined :
+                Icons.visibility,
+                size: 25,
+                color: Colors.yellow[800],
+              )),
+        ],
         leadingWidth: 30,
         automaticallyImplyLeading: false,
         title: Text(
@@ -163,7 +202,11 @@ class _MyTasksState extends State<MyTasks> {
                                     taskList.length,
                                 itemBuilder: (context, index) {
                                   var data = taskList[index];
-                                  return GestureDetector(
+                                  return
+                                  !showCompleted?
+                                      !data["isCompleted"]?
+
+                                    GestureDetector(
                                       onTap: () {
                                         Navigator.push(context,
                                             MaterialPageRoute(
@@ -209,6 +252,54 @@ class _MyTasksState extends State<MyTasks> {
                                       )
 
                                       //  UserTile(thisIsList[index]["fullName"]!)
+
+                                      ):Container()
+                                          :GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                                      return TaskPage(
+                                                        isMyTask: true,
+                                                        projectId: data["projectId"],
+                                                        index: index,
+                                                        taskName: data["taskname"] ?? " ",
+                                                        dueDate: data["dueDate"] ?? " ",
+                                                        isCompleted:
+                                                        data["isCompleted"] ?? false,
+                                                        taskDescription:
+                                                        data["description"] ??
+                                                            "no description",
+                                                        projectOfTask:
+                                                        data["projectOfTask"] ?? " ",
+                                                        priority: data["priority"] ?? 1,
+                                                        status: data["status"] ?? 2,
+                                                        assignedBy:
+                                                        data["assignedBy"] ?? "rohit",
+                                                        assignedTo:
+                                                        data["assignedTo"] ?? "vikas",
+                                                        isAssigned:
+                                                        data["isAssigned"] ?? true,
+                                                        imageUrl:
+                                                        data["attachmentLink"] ?? "",
+                                                        taskId: data["_id"] ?? "",
+                                                        projectName: data["projectName"],
+                                                      );
+                                                    }));
+                                          },
+                                          child:
+                                          TaskListItem(
+                                            index: index,
+                                            isChecked: taskList[index]["isCompleted"] ?? false,
+                                            dueDate: taskList[index]["dueDate"] ?? " ",
+                                            taskName: data["taskname"],
+                                            taskDescription: data["description"],
+                                            taskId: taskList[index]["_id"] ?? " ",
+                                            projectId: widget.projectId,
+                                            isMyTask: true,
+                                          )
+
+                                        //  UserTile(thisIsList[index]["fullName"]!)
 
                                       );
                                 },

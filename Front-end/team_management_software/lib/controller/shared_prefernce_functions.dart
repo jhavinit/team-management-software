@@ -2,6 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 var sharedPreferenceLoginKey="LoginKey";
 var  sharedPrefUserNameKey="userNameKey";
+var  sharedPrefUserDetails="userDetailsKey";
 
 class SharedPreferencesFunctions {
   static Future getIsUserLoggedIn() async {
@@ -23,6 +24,19 @@ class SharedPreferencesFunctions {
     SharedPreferences preferences= await SharedPreferences.getInstance();
     await preferences.setString(sharedPrefUserNameKey, username);
   }
+
+  static Future<void> saveUserDetails(String userDetails) async{
+    print("from shared pref");
+    print(userDetails);
+
+    SharedPreferences preferences= await SharedPreferences.getInstance();
+    await preferences.setString(sharedPrefUserDetails, userDetails);
+  }
+  static Future getUserDetails() async{
+    SharedPreferences preferences= await SharedPreferences.getInstance();
+    return preferences.getString(sharedPrefUserDetails);
+  }
+
 
 
 }

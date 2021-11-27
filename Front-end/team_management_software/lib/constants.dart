@@ -2,6 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Constants {
+
+  static Color buttonColor = const Color(0xFFeccf1d);
+  static String username = "";
+  static String email = "";
+
   static kTextFormFieldDecoration(String labelText) {
     return InputDecoration(
         labelText: labelText,
@@ -27,17 +32,8 @@ class Constants {
   static kTextFormFieldDecorationForTask(String labelText) {
     return InputDecoration(
       labelText: labelText,
-
-      // LabellStyle: const TextStyle(
-      //   height: 1,
-      //   letterSpacing: 1.2,
-      //     wordSpacing: 2,
-      //     fontFamily: 'Montserrat',
-      //     fontWeight: FontWeight.w400,
-      //     color: Colors.grey,
-      //   fontSize: 18
-      // ),
       labelStyle: const TextStyle(
+        fontSize: 20,
         fontFamily: 'Montserrat',
         fontWeight: FontWeight.w300,
         color: Colors.grey,
@@ -64,7 +60,4 @@ class Constants {
     );
   }
 
-  static Color buttonColor = const Color(0xFFeccf1d);
-  static String username = "";
-  static String email = "";
 }

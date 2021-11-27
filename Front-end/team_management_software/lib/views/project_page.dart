@@ -175,7 +175,8 @@ class _ProjectPageState extends State<ProjectPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          leading: IconButton(
+          leading:
+          IconButton(
             onPressed: () {
               Navigator.pop(context);
             },
@@ -386,8 +387,15 @@ class _ProjectPageState extends State<ProjectPage> {
                                     )
                                 ),
                                 Container(
+                                  padding: EdgeInsets.all(5),
+                                  alignment: Alignment.topLeft,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  
                                   child:InkWell(
-                                      child:  Text('Open Browser'),
+                                      child:  Text('Github link'),
                                       onTap: ()
                                      async {
                                        await canLaunch(

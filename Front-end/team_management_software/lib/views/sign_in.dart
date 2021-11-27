@@ -49,7 +49,7 @@ class _SignInPageState extends State<SignInPage> {
           password: passwordController.text,
           role: widget.role);
       var finalData = jsonDecode(signInResponse);
-      if (finalData["status"] == "true") {
+      if (finalData["status"] == true) {
         final snackBar = SnackBar(
           content: Text("Sign in successful"),
           duration: Duration(milliseconds: 500),
