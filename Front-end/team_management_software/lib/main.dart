@@ -39,14 +39,14 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool userIsLoggedIn = false;
-  isUserLoggedIn() async {
-    userIsLoggedIn = await SharedPreferencesFunctions.getIsUserLoggedIn();
-    setState(() {});
-  }
+  // isUserLoggedIn() async {
+  //   userIsLoggedIn = await SharedPreferencesFunctions.getIsUserLoggedIn();
+  //   setState(() {});
+  // }
 
   @override
   void initState() {
-    isUserLoggedIn();
+    // isUserLoggedIn();
     // TODO: implement initState
     super.initState();
   }
