@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:team_management_software/controller/http_functions.dart';
 import 'package:team_management_software/views/sign_in.dart';
 import 'package:sizer/sizer.dart';
-import 'package:team_management_software/views/sign_up.dart';
+import 'package:team_management_software/views/admin_sign_up.dart';
 import 'package:team_management_software/views/user_sign_up.dart';
 import '../constants.dart';
 
@@ -33,7 +33,7 @@ class WelcomeScreen extends StatelessWidget {
                       GestureDetector(
                         onTap: (){
                           Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                              isSignUp?SignUpPage():SignInPage(role:"admin") ));
+                              isSignUp?AdminSignUp():SignInPage(role:"admin") ));
                        //   Navigator.pop(context);
                         },
                         child:Container(

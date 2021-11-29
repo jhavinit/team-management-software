@@ -9,7 +9,7 @@ import 'package:team_management_software/views/project_page.dart';
 import 'package:team_management_software/views/screens/bottom_navigation.dart';
 import 'package:team_management_software/views/screens/my_tasks.dart';
 import 'package:team_management_software/views/screens/search2.dart';
-import 'package:team_management_software/views/screens/search3.dart';
+//import 'package:team_management_software/views/screens/search3.dart';
 import 'package:team_management_software/views/sign_in.dart';
 import 'package:team_management_software/views/splashscreen.dart';
 import 'package:team_management_software/views/task_page.dart';
@@ -73,8 +73,8 @@ class _MyAppState extends State<MyApp> {
                   //BottomNavigation()
                   // Home()
                   // SplashScreen()
-                  Search3()
-              //userIsLoggedIn==null||userIsLoggedIn!=true? SplashScreen(): BottomNavigation()
+                  //Search3()
+              userIsLoggedIn==null||userIsLoggedIn!=true? SplashScreen(): BottomNavigation()
               ));
     });
   }

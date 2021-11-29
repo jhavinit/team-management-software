@@ -6,7 +6,7 @@ import 'package:sizer/sizer.dart';
 import 'package:team_management_software/controller/http_functions.dart';
 import 'package:team_management_software/controller/shared_prefernce_functions.dart';
 import 'package:team_management_software/views/screens/bottom_navigation.dart';
-import 'package:team_management_software/views/sign_up.dart';
+import 'package:team_management_software/views/admin_sign_up.dart';
 import 'package:team_management_software/views/user_sign_up.dart';
 import 'package:team_management_software/views/welcome_screen.dart';
 
@@ -25,15 +25,14 @@ class _SignInPageState extends State<SignInPage> {
   Constants constants = Constants();
 
   bool showSpinner = false;
-  // TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController userNameController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
-  getToken() async {
+  updateTokenOfUser() async {
     FirebaseNotification().getToken().then((value) {
       HttpFunctions().updateTokenOfUserOnSignIn(value);
-      print(value);
+      print(" The token from sign in $value");
     });
   }
 
@@ -50,15 +49,17 @@ class _SignInPageState extends State<SignInPage> {
           role: widget.role);
       var finalData = jsonDecode(signInResponse);
       if (finalData["status"] == true) {
-        final snackBar = SnackBar(
+        const snackBar = SnackBar(
           content: Text("Sign in successful"),
           duration: Duration(milliseconds: 500),
         );
+       // Constants.role=widget.role;
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
         SharedPreferencesFunctions.setIsUserLoggedIn(true);
         SharedPreferencesFunctions.saveUserName(userNameController.text);
-        await getToken();
-        Navigator.push(context,
+     //   await updateTokenOfUser();
+        Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => BottomNavigation()));
       } else {
         final snackBar = SnackBar(
@@ -129,7 +130,7 @@ class _SignInPageState extends State<SignInPage> {
                       controller: passwordController,
                       validator: (val) {
                         val ??= "";
-                        return val.length >= 6
+                        return val.length >= 3
                             ? null
                             : "Enter a valid password";
                       },
@@ -179,8 +180,8 @@ class _SignInPageState extends State<SignInPage> {
                             Navigator.pushReplacement(context,
                                 MaterialPageRoute(builder: (context) {
                               return widget.role == "admin"
-                                  ? SignUpPage()
-                                  : UserSignUp();
+                                  ? AdminSignUp()
+                                  : const UserSignUp();
                             }));
                           },
                           child: Center(

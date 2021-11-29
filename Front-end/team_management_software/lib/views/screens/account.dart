@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:team_management_software/constants.dart';
 import 'package:team_management_software/controller/shared_prefernce_functions.dart';
 import 'package:team_management_software/views/screens/profileinfo.dart';
 import 'package:team_management_software/views/welcome_screen.dart';
@@ -21,6 +22,7 @@ class _AccountState extends State<Account> {
   @override
   void initState() {
     // TODO: implement initState
+    print("the role is ${Constants.role}");
     getFromSharedPref();
     super.initState();
   }

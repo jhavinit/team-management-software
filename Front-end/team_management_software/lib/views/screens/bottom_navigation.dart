@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:team_management_software/constants.dart';
+import 'package:team_management_software/controller/shared_prefernce_functions.dart';
 import 'package:team_management_software/views/chat_section/coversation_list.dart';
 import 'package:team_management_software/views/chat_section/push_notification.dart';
 import 'package:team_management_software/views/home_screen.dart';
@@ -32,16 +34,26 @@ class _BottomNavigationState extends State<BottomNavigation> {
   //  // );
   // }
   getToken() async {
+   // await FirebaseNotification().initialise(context);
     FirebaseNotification().getToken().then((value) async{
+      print("the token from bottom navigation$value");
     await  HttpFunctions().updateTokenOfUserOnSignIn(value);
-      print(value);
+
     });
+  }
+  updateSharedPrefData()async{
+
+    Constants.role=await SharedPreferencesFunctions.getRole();
+    Constants.userDetails=await SharedPreferencesFunctions.getUserDetails();
+
   }
 
   @override
   void initState() {
     FirebaseNotification().initialise(context);
+    updateSharedPrefData();
     getToken();
+
     // TODO: implement initState
     super.initState();
   }

@@ -29,6 +29,7 @@ class _UserSignUpState extends State<UserSignUp> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController designationController = TextEditingController();
+  TextEditingController idController = TextEditingController();
 
   var error = [false, false];
   errorInForm(index) {
@@ -65,7 +66,8 @@ var token="";
           passwordConfirm: confirmPasswordController.text,
           email: emailController.text,
           designation: designationController.text,
-          token: token
+          token: token,
+          companyId:idController.text
           //todo token
       );
 
@@ -223,11 +225,12 @@ var token="";
                                     decoration:
                                     Constants.kTextFormFieldDecoration("EMAIL"),
                                   ),
+
                                   TextFormField(
                                     controller: designationController,
                                     validator: (val) {
                                       val ??= " ";
-                                      val.length >= 2 ? null : errorInForm(1);
+                                      val.length >= 2 ? null : errorInForm(0);
                                       return val.length >= 2
                                           ? null
                                           : "Enter a valid company name";
@@ -256,7 +259,7 @@ var token="";
                                     validator: (val) {
                                       val ??= " ";
 
-                                      val.length >= 3? null : errorInForm(0);
+                                      val.length >= 3? null : errorInForm(1);
                                       return val.length >= 3
                                           ? null
                                           : " Enter a valid username";
@@ -269,7 +272,7 @@ var token="";
                                     controller: passwordController,
                                     validator: (val) {
                                       val ??= "";
-                                      val.length >= 6 ? null : errorInForm(0);
+                                      val.length >= 6 ? null : errorInForm(1);
                                       return val.length >= 6
                                           ? null
                                           : "Enter a valid password greater than 6";
@@ -282,7 +285,7 @@ var token="";
                                     controller: confirmPasswordController,
                                     validator: (val) {
                                       val ??= "";
-                                      val.length >= 6 ? null : errorInForm(0);
+                                      val.length >= 6 ? null : errorInForm(1);
                                       return val.length >= 6
                                           ? null
                                           : "Password do not match";
@@ -292,6 +295,20 @@ var token="";
                                     obscureText: true,
                                   ),
                                   // SizedBox(height: 1.h),
+                                  TextFormField(
+                                    controller: confirmPasswordController,
+                                    validator: (val) {
+                                      val ??= "";
+                                      val.length >= 6 ? null : errorInForm(1);
+                                      return val.length >= 2
+                                          ? null
+                                          : "Password do not match";
+                                    },
+                                    decoration: Constants.kTextFormFieldDecoration(
+                                        "COMPANY ID"),
+                                    obscureText: true,
+                                  ),
+
 
 
 

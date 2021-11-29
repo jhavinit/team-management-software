@@ -162,14 +162,6 @@ class _ProjectPageState extends State<ProjectPage> {
 
 
 
-
-
-
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -186,7 +178,7 @@ class _ProjectPageState extends State<ProjectPage> {
             ),
           ),
           actions: [
-            IconButton(
+       Constants.role=="admin"?     IconButton(
               tooltip: "Save",
               padding: EdgeInsets.symmetric(horizontal: 10),
               onPressed: () {
@@ -198,8 +190,8 @@ class _ProjectPageState extends State<ProjectPage> {
               },
               icon: Icon(Icons.save,
                   color: editable ? Colors.teal : Colors.grey[300]),
-            ),
-            IconButton(
+            ):Container(),
+            Constants.role=="admin"?      IconButton(
               padding: EdgeInsets.symmetric(horizontal: 10),
               onPressed: () {
                 setState(() {
@@ -211,8 +203,8 @@ class _ProjectPageState extends State<ProjectPage> {
                 editable ? Icons.create : Icons.create_outlined,
                 color: Colors.black,
               ),
-            ),
-            PopupMenuButton<String>(
+            ):Container(),
+            Constants.role=="admin"?      PopupMenuButton<String>(
               padding: EdgeInsets.only(right: 10),
               // color: Colors.grey[100],
               offset: const Offset(50, 56),
@@ -280,7 +272,7 @@ class _ProjectPageState extends State<ProjectPage> {
                   ),
                 ),
               ],
-            ),
+            ):Container(),
           ],
           elevation: 1,
           shadowColor: Colors.grey[400],
@@ -421,18 +413,17 @@ class _ProjectPageState extends State<ProjectPage> {
                                               fontSize: 14),
                                         ),
                                         const SizedBox(width: 10,),
-                                        GestureDetector(
+                                        Constants.role=="admin"?      GestureDetector(
                                           onTap: (){
                                             _dialogForAssign();
                                           },
                                           child: const CircleAvatar(
-
                                             maxRadius: 12,
 
                                             foregroundColor: Colors.white,
                                               backgroundColor: Colors.blueGrey,
                                               child: Icon(Icons.add)),
-                                        )
+                                        ):Container()
                                       ],
                                     )),
                                 Column(

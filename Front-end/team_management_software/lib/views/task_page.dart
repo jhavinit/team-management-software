@@ -125,7 +125,6 @@ class _TaskPageState extends State<TaskPage> {
                       ),
                       GestureDetector(
                         onTap: (){
-
                           setState(() {
                             isPriority?   selectedPriority=2:selectedStatus=2;
                           });
@@ -288,7 +287,7 @@ class _TaskPageState extends State<TaskPage> {
             icon: Icon(Icons.arrow_back_ios,color: Colors.black,),
           ),
           actions: [
-            IconButton(
+            Constants.role=="admin"?     IconButton(
               tooltip: "Mark as done",
               padding: EdgeInsets.symmetric(horizontal: 10),
               onPressed: () {
@@ -307,8 +306,8 @@ class _TaskPageState extends State<TaskPage> {
                 color: isCompleted?Colors.teal:Colors.black,
                 size: 30,
               ),
-            ),
-            IconButton(
+            ):Container(),
+            Constants.role=="admin"?     IconButton(
               tooltip: "Save",
               padding: EdgeInsets.symmetric(horizontal: 10),
               onPressed: () {
@@ -320,8 +319,8 @@ class _TaskPageState extends State<TaskPage> {
 
               },
               icon: Icon(Icons.save, color: editable?Colors.teal:Colors.grey[300]),
-            ),
-            IconButton(
+            ):Container(),
+            Constants.role=="admin"?     IconButton(
               padding: EdgeInsets.symmetric(horizontal: 10),
               onPressed: () {
                 setState(() {
@@ -333,15 +332,15 @@ class _TaskPageState extends State<TaskPage> {
                 editable? Icons.create:Icons.create_outlined,
                 color: Colors.black,
               ),
-            ),
-            IconButton(
+            ):Container(),
+            Constants.role=="admin"?     IconButton(
               padding: EdgeInsets.only(right: 15),
               onPressed: () {},
               icon: const Icon(
                 Icons.more_vert,
                 color: Colors.black,
               ),
-            ),
+            ):Container(),
           ],
           elevation: 1,
           shadowColor: Colors.grey[400],

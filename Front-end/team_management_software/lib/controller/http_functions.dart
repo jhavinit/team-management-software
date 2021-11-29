@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:team_management_software/constants.dart';
 import 'package:team_management_software/controller/shared_prefernce_functions.dart';
 
 class HttpFunctions{
@@ -42,8 +43,17 @@ class HttpFunctions{
         },
         body: finalData
     );
-    print("this is response");
-    print(response.body);
+    print("this is response from registering new admin");
+   // print(response.body);
+    String data = response.body;
+    var finalDataReceived = jsonDecode(data);
+    if(finalDataReceived["status"]==true) {
+      //save to shared pref
+      Constants.role="admin";
+      await SharedPreferencesFunctions.saveRole("admin");
+      await SharedPreferencesFunctions.saveUserDetails(
+          jsonEncode(finalDataReceived["user"]));
+    }
     return response.body;
   }
 
@@ -70,8 +80,10 @@ class HttpFunctions{
     var finalDataReceived = jsonDecode(data);
     if(finalDataReceived["status"]==true){
    //save to shared pref
+      Constants.role=finalDataReceived["user"]["role"];
+      await SharedPreferencesFunctions.saveRole(finalDataReceived["user"]["role"]);
      await SharedPreferencesFunctions.saveUserDetails(jsonEncode(finalDataReceived["user"]));
-     // print("saved data from shared pref is ${finalDataReceived["user"]}");
+    // print("saved data from shared pref is $finalDataReceived");
     }
 
 
@@ -85,7 +97,8 @@ class HttpFunctions{
       String ?password,
       String ?passwordConfirm,
       String ?designation,
-      String ?token}) async{
+      String ?token,
+      var companyId}) async{
 
     print("Registering new user with token $token");
     var url=Uri.parse("https://ems-heroku.herokuapp.com/users/register");
@@ -96,7 +109,8 @@ class HttpFunctions{
       "password":password,
       "passwordConfirm":passwordConfirm,
       "designation":designation,
-      "token":token
+      "token":token,
+      "companyId":companyId
       // "efOjZLfxSKCs7NneDEDZNN:APA91bG0ctBRv5gJPvfQ5jqpQAcbtCbRFN3v-uTUq9oMzGMsZACGDnQg"
       //     "cH7FwLs32UUnPNfQ3wUhR5aHxRyZvkAWMeHm_UuaUByaF3n_PL6RQbe6RLd-ucuvYJ2luO3e9g9QUo-Sqreb",
     };
@@ -111,15 +125,19 @@ class HttpFunctions{
     print("the response form sending user details is ${response.statusCode}");
     print(response.body);
     var data=response.body;
-    var dataDecoded=jsonDecode(data);
-    print(dataDecoded["status"]);
-    return dataDecoded["status"];
+    var finalDataReceived = jsonDecode(data);
+    if(finalDataReceived["status"]==true){
+      Constants.role="user";
+      await SharedPreferencesFunctions.saveRole("user");
+
+      await SharedPreferencesFunctions.saveUserDetails(jsonEncode(finalDataReceived["user"]));
+    }
+    return finalDataReceived["status"];
 
   }
 
   updateTokenOfUserOnSignIn(token)async{
     //todo update the token on sign in
-
     var username=await SharedPreferencesFunctions.getUserName();
     print(token);
     print("updating the token on Sign In from http functions");
@@ -135,6 +153,7 @@ class HttpFunctions{
             'Content-Type': 'application/json; charset=UTF-8',
           },
           body: finalData);
+      print("from update token http");
       print(response.body);
       print(response.statusCode);
     }

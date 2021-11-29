@@ -9,12 +9,12 @@ import 'package:sizer/sizer.dart';
 import '../constants.dart';
 import 'home_screen.dart';
 
-class SignUpPage extends StatefulWidget {
+class AdminSignUp extends StatefulWidget {
   @override
-  _SignUpPageState createState() => _SignUpPageState();
+  _AdminSignUpState createState() => _AdminSignUpState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _AdminSignUpState extends State<AdminSignUp> {
   bool isLoading=false;
   TextEditingController nameController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
@@ -69,7 +69,7 @@ class _SignUpPageState extends State<SignUpPage> {
       var finalData = jsonDecode(signUpResponse);
 
 
-      if (finalData["status"] == "true") {
+      if (finalData["status"] == true) {
         const snackBar = SnackBar(
           content: Text("Sign Up successful"),
           duration: Duration(milliseconds: 500),

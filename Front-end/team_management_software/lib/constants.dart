@@ -6,6 +6,8 @@ class Constants {
   static Color buttonColor = const Color(0xFFeccf1d);
   static String username = "";
   static String email = "";
+  static String userDetails="";
+  static String role="user";
 
   static kTextFormFieldDecoration(String labelText) {
     return InputDecoration(

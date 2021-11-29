@@ -8,6 +8,7 @@ import 'package:team_management_software/views/components/task_tile.dart';
 import 'package:team_management_software/views/task_page.dart';
 
 import '../../change_notifier.dart';
+import '../constants.dart';
 
 class TaskListScreen extends StatefulWidget {
   final String projectId, projectName;
@@ -57,7 +58,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
     return ModalProgressHUD(
       inAsyncCall: loadingScreen,
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton:  Constants.role=="admin"?  FloatingActionButton(
             backgroundColor: Colors.black,
             onPressed: () {
               showModalBottomSheet<void>(
@@ -74,7 +75,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
               Icons.add_task,
               color: Colors.yellow[800],
               size: 35,
-            )),
+            )):Container(),
         appBar: AppBar(
           leadingWidth: 30,
           automaticallyImplyLeading: false,

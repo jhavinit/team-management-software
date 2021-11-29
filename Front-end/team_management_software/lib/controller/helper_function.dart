@@ -129,7 +129,7 @@ class HelperFunction {
 
   Future getAllProjectDetails() async {
     http.Response response =
-        await http.get(Uri.parse("https://ems-heroku.herokuapp.com/projects?username=rohit8"));
+        await http.get(Uri.parse("https://ems-heroku.herokuapp.com/projects?username=User1"));
     var data = response.body;
     var finalData = jsonDecode(data);
     // print(finalData["message"]);
